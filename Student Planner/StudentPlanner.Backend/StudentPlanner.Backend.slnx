@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/" />
+  <Folder Name="/src/">
+    <Project Path="StudentPlanner.Core/StudentPlanner.Core.csproj" />
+    <Project Path="StudentPlanner.Infrastructure/StudentPlanner.Infrastructure.csproj" Id="e97238a1-7613-456c-8a3a-e1c011a26f44" />
+    <Project Path="StudentPlanner.UI/StudentPlanner.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
