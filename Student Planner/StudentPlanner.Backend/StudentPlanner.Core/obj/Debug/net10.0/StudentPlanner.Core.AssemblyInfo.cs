@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("StudentPlanner.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a97b8f99eeef36ad2d40c1d2bf9786d497c4b5c7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+278040e183722a96c9de0a2e1b2d922dfab27b94")]
 [assembly: System.Reflection.AssemblyProductAttribute("StudentPlanner.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("StudentPlanner.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
