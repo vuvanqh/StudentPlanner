@@ -1,5 +1,6 @@
 ﻿using StudentPlanner.Core.Domain;
 using StudentPlanner.Core.Domain.RepositoryContracts;
+using System.Runtime.CompilerServices;
 
 namespace StudentPlanner.Core.Application.PersonalEvents;
 
@@ -26,9 +27,12 @@ public class PersonalEventService : IPersonalEventService
         await _personalEventRepo.DeleteAsync(eventId);
     }
 
-    public Task<PersonalEventResponse?> GetEventByIdAsync(Guid userId, Guid eventId)
+    public async Task<PersonalEventResponse?> GetEventByIdAsync(Guid userId, Guid eventId)
     {
-        throw new NotImplementedException();
+        PersonalEvent? personalEvent = await _personalEventRepo.GetEventByEventIdAsync(eventId);
+        PersonalEventPolicy.EnsureHasPermissions(userId, personalEvent);
+
+        return personalEvent!.ToPersonalEventResponse();
     }
 
     public Task<List<PersonalEventResponse>> GetEventsAsync(Guid userId)

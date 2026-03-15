@@ -257,6 +257,69 @@ public class PersonalEventTests
     }
     #endregion
 
+    #region Get Event(s) Tests
+    [Fact]
+    public async Task GetPersonalEvent_ShouldReturnEvent_WhenRequestIsValid()
+    {
+        Guid eventId = Guid.NewGuid();
+        Guid dummyUser = Guid.NewGuid();
+
+        PersonalEvent personalEvent = new PersonalEvent()
+        {
+            Id = eventId,
+            UserId = dummyUser,
+            EventDetails = _fixture.Build<EventDetails>()
+                .With(t => t.StartTime, DateTime.UtcNow)
+                .With(t => t.EndTime, DateTime.UtcNow.AddDays(1))
+                .Create<EventDetails>()
+        };
+
+        _personalEventRepoMock.Setup(t => t.GetEventByEventIdAsync(eventId))
+            .ReturnsAsync(personalEvent);
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+        PersonalEventResponse? resp = await personalEventService.GetEventByIdAsync(dummyUser, eventId);
+      
+        _personalEventRepoMock.Verify(r => r.GetEventByEventIdAsync(It.IsAny<Guid>()), Times.Once);
+        Assert.True(resp != null);
+    }
+
+    [Fact]
+    public async Task GetPersonalEvent_ShouldThrow_WhenUserDoesNotOwnTheEvent()
+    {
+        Guid eventId = Guid.NewGuid();
+        Guid dummyUser = Guid.NewGuid();
+        Guid dummyUser2 = Guid.NewGuid();
+
+        PersonalEvent personalEvent = new PersonalEvent()
+        {
+            Id = eventId,
+            UserId = dummyUser,
+            EventDetails = _fixture.Create<EventDetails>()
+        };
+
+        _personalEventRepoMock.Setup(t => t.GetEventByEventIdAsync(eventId))
+            .ReturnsAsync(personalEvent);
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => personalEventService.GetEventByIdAsync(dummyUser2, eventId));
+    }
+    [Fact]
+    public async Task GetPersonalEvent_ShouldThrow_WhenEventDoesNotExist()
+    {
+        Guid eventId = Guid.NewGuid();
+        Guid dummyUser = Guid.NewGuid();
+
+        _personalEventRepoMock.Setup(t => t.GetEventByEventIdAsync(eventId))
+            .ReturnsAsync((PersonalEvent?)null);
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.GetEventByIdAsync(dummyUser, eventId));
+    }
+    #endregion
+
     #region helpers
     #endregion
 }
