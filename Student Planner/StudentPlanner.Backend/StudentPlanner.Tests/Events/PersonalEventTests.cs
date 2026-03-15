@@ -318,6 +318,49 @@ public class PersonalEventTests
 
         await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.GetEventByIdAsync(dummyUser, eventId));
     }
+
+    [Fact]
+    public async Task GetPersonalEvents_ShouldReturnEmptyList_WhenUserDoesNotHavePersonalEvents()
+    {
+        Guid dummyUser = Guid.NewGuid();
+
+        _personalEventRepoMock.Setup(t => t.GetEventsByUserIdAsync(dummyUser))
+            .ReturnsAsync(new List<PersonalEvent>());
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+        List<PersonalEventResponse> resp = await personalEventService.GetEventsAsync(dummyUser);
+
+        _personalEventRepoMock.Verify(r => r.GetEventsByUserIdAsync(It.IsAny<Guid>()), Times.Once);
+        Assert.True(resp != null);
+        Assert.True(resp.Count == 0);
+    }
+
+    [Fact]
+    public async Task GetPersonalEvents_ShouldReturnPersonalEventList_WhenUserOwnsPersonalEvents()
+    {
+        Guid eventId = Guid.NewGuid();
+        Guid dummyUser = Guid.NewGuid();
+
+        PersonalEvent personalEvent = new PersonalEvent()
+        {
+            Id = eventId,
+            UserId = dummyUser,
+            EventDetails = _fixture.Build<EventDetails>()
+                .With(t => t.StartTime, DateTime.UtcNow)
+                .With(t => t.EndTime, DateTime.UtcNow.AddDays(1))
+                .Create<EventDetails>()
+        };
+
+        _personalEventRepoMock.Setup(t => t.GetEventsByUserIdAsync(dummyUser))
+            .ReturnsAsync(new List<PersonalEvent>() { personalEvent });
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+        List<PersonalEventResponse> resp = await personalEventService.GetEventsAsync(dummyUser);
+
+        _personalEventRepoMock.Verify(r => r.GetEventsByUserIdAsync(It.IsAny<Guid>()), Times.Once);
+        Assert.True(resp.Count>0);
+        Assert.Equal(resp[0].Id, eventId);
+    }
     #endregion
 
     #region helpers

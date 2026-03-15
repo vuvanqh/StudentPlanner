@@ -35,9 +35,10 @@ public class PersonalEventService : IPersonalEventService
         return personalEvent!.ToPersonalEventResponse();
     }
 
-    public Task<List<PersonalEventResponse>> GetEventsAsync(Guid userId)
+    public async Task<List<PersonalEventResponse>> GetEventsAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        return (await _personalEventRepo.GetEventsByUserIdAsync(userId))
+            .Select(ev => ev.ToPersonalEventResponse()).ToList();
     }
 
     public async Task UpdatePersonalEventAsync(Guid userId, Guid eventId, UpdatePersonalEventRequest request)
