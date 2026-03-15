@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StudentPlanner.Core.Domain;
 
-public class EventDetails //represents a final validated data that is to be passed as a response so shouldnt be mutable?
+public class EventDetails: IEquatable<EventDetails> //represents a final validated data that is to be passed as a response so shouldnt be mutable?
 {
     [StringLength(50)]
     public string Title { get; set; } = null!;
@@ -14,4 +14,14 @@ public class EventDetails //represents a final validated data that is to be pass
     [StringLength(70)]
     public string? Location { get; set; }
     public string? Description { get; set; }
+
+    public bool Equals(EventDetails? other)
+    {
+        return other!= null &&
+            Title == other.Title &&
+            StartTime == other.StartTime &&
+            EndTime == other.EndTime &&
+            Location == other.Location &&
+            Description == other.Description;
+    }
 }

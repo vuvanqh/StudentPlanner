@@ -1,28 +1,20 @@
 ﻿using StudentPlanner.Core.Domain;
 using StudentPlanner.Core.Domain.RepositoryContracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StudentPlanner.Core.Application.PersonalEvents;
 
 public class PersonalEventService : IPersonalEventService
 {
     private readonly IPersonalEventRepository _personalEventRepo;
+    private readonly PersonalEventPolicy _policy = new PersonalEventPolicy();
     public PersonalEventService(IPersonalEventRepository personalEventRepo)
     {
         _personalEventRepo = personalEventRepo;
     }
     public async Task<Guid> CreatePersonalEventAsync(Guid userId, CreatePersonalEventRequest request)
     {
-        if (request.Title == string.Empty)
-            throw new ArgumentException("The title cannot be empty.");
-        if (request.StartTime < DateTime.UtcNow.AddMinutes(-1))
-            throw new ArgumentException("The start date cannot be in the past.");
-        if (request.EndTime < request.StartTime)
-            throw new ArgumentException("The end date must be after the start date.");
-
         PersonalEvent personalEvent = request.ToPersonalEvent(userId);
+        PersonalEventPolicy.EnsureValidEvent(personalEvent);
         await _personalEventRepo.AddAsync(personalEvent);
         return personalEvent.Id;
     }
@@ -42,8 +34,16 @@ public class PersonalEventService : IPersonalEventService
         throw new NotImplementedException();
     }
 
-    public Task UpdatePersonalEventAsync(Guid userId, Guid eventId, UpdatePersonalEventRequest request)
+    public async Task UpdatePersonalEventAsync(Guid userId, Guid eventId, UpdatePersonalEventRequest request)
     {
-        throw new NotImplementedException();
+        PersonalEvent? personalEvent = await _personalEventRepo.GetEventByEventIdAsync(eventId);
+
+        if (personalEvent == null)
+            throw new ArgumentException("Event does not exist.");
+        if (personalEvent.UserId != userId) 
+            throw new UnauthorizedAccessException("You do not have permission to access this event.");
+
+        PersonalEventPolicy.EnsureValidEvent(personalEvent);
+        await _personalEventRepo.UpdateAsync(personalEvent);
     }
 }

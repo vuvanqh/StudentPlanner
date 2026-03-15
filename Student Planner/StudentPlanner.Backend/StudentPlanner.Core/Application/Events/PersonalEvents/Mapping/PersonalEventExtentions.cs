@@ -24,3 +24,24 @@ public static class CreatePersonalEventRequestExtention
         };
     }
 }
+
+public static class UpdatePersonalEventRequestExtention
+{
+    public static PersonalEvent ToPersonalEvent(this UpdatePersonalEventRequest request, Guid userId, Guid eventId)
+    {
+        return new PersonalEvent()
+        {
+            Id = eventId,
+            UserId = userId,
+            EventDetails = new EventDetails()
+            {
+                Title = request.Title,
+                StartTime = request.StartTime,
+                EndTime = request.EndTime,
+                Location = request.Location,
+                Description = request.Description
+            }
+        };
+    }
+}
+

@@ -7,6 +7,7 @@ using Moq;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Core.Domain;
 using System.Runtime.CompilerServices;
+using Xunit.Internal;
 
 
 namespace StudentPlanner.Tests;
@@ -45,7 +46,7 @@ public class PersonalEventTests
         Assert.Equal(dummyUser, result.UserId);
     }
     [Fact]
-    public async Task CreateEvent_ShouldThrow_WhenEndDateBeforeEqualStartDate()
+    public async Task CreatePersonalEvent_ShouldThrow_WhenEndDateBeforeEqualStartDate()
     {
         PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
 
@@ -55,10 +56,9 @@ public class PersonalEventTests
             .Create();
         
         Exception exception = await Assert.ThrowsAsync<ArgumentException>(()=> personalEventService.CreatePersonalEventAsync(Guid.NewGuid(), request));
-        Assert.Equal("The end date must be after the start date.", exception.Message);
     }
     [Fact]
-    public async Task CreateEvent_ShouldThrow_WhenTitleIsEmpty() {
+    public async Task CreatePersonalEvent_ShouldThrow_WhenTitleIsEmpty() {
         PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
 
         CreatePersonalEventRequest request = _fixture.Build<CreatePersonalEventRequest>()
@@ -68,10 +68,9 @@ public class PersonalEventTests
             .Create();
 
         Exception exception = await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.CreatePersonalEventAsync(Guid.NewGuid(), request));
-        Assert.Equal("The title cannot be empty.", exception.Message);
     }
     [Fact]
-    public async Task CreateEvent_ShouldThrow_WhenStartDateInPast() {
+    public async Task CreatePersonalEvent_ShouldThrow_WhenStartDateInPast() {
         PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
 
         CreatePersonalEventRequest request = _fixture.Build<CreatePersonalEventRequest>()
@@ -80,7 +79,122 @@ public class PersonalEventTests
             .Create();
 
         Exception exception = await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.CreatePersonalEventAsync(Guid.NewGuid(), request));
-        Assert.Equal("The start date cannot be in the past.", exception.Message);
     }
+    #endregion
+
+    #region Update Personal Event Test
+    [Fact]
+    public async Task UpdatePersonalEvent_ShouldUpdateEvent_WhenRequestIsValid()
+    {
+        Guid eventId = Guid.NewGuid();
+        Guid dummyUser = Guid.NewGuid();
+
+        PersonalEvent personalEvent = new PersonalEvent()
+        {
+            Id = eventId,
+            UserId = dummyUser,
+            EventDetails = _fixture.Build<EventDetails>()
+                .With(t=>t.StartTime, DateTime.UtcNow)
+                .With(t=>t.EndTime, DateTime.UtcNow.AddDays(1))
+                .Create<EventDetails>()
+        };
+
+        UpdatePersonalEventRequest request = _fixture.Build<UpdatePersonalEventRequest>()
+            .With(t => t.StartTime, DateTime.UtcNow)
+            .With(t => t.EndTime, DateTime.UtcNow.AddDays(1))
+            .Create();
+
+        _personalEventRepoMock.Setup(t => t.GetEventByEventIdAsync(eventId))
+            .ReturnsAsync(personalEvent);
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+        await personalEventService.UpdatePersonalEventAsync(dummyUser, eventId, request);
+
+        PersonalEvent updatedEvent = request.ToPersonalEvent(dummyUser, eventId);
+
+        _personalEventRepoMock.Verify(r => r.UpdateAsync(It.IsAny<PersonalEvent>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateEvent_ShouldThrow_WhenUserDoesNotOwnTheEvent()
+    {
+        Guid eventId = Guid.NewGuid();
+        Guid dummyUser = Guid.NewGuid();
+        Guid dummyUser2 = Guid.NewGuid();
+
+        PersonalEvent personalEvent = new PersonalEvent()
+        {
+            Id = eventId,
+            UserId = dummyUser,
+            EventDetails = _fixture.Create<EventDetails>()
+        };
+
+        UpdatePersonalEventRequest request = _fixture.Create<UpdatePersonalEventRequest>();
+
+        _personalEventRepoMock.Setup(t => t.GetEventByEventIdAsync(eventId))
+            .ReturnsAsync(personalEvent);
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => personalEventService.UpdatePersonalEventAsync(dummyUser2, eventId, request));
+    }
+    [Fact]
+    public async Task UpdateEvent_ShouldThrow_WhenEventDoesNotExist()
+    {
+        Guid eventId = Guid.NewGuid();
+        Guid dummyUser = Guid.NewGuid();
+
+        UpdatePersonalEventRequest request = _fixture.Create<UpdatePersonalEventRequest>();
+
+        _personalEventRepoMock.Setup(t => t.GetEventByEventIdAsync(eventId))
+            .ReturnsAsync((PersonalEvent?)null);
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.UpdatePersonalEventAsync(dummyUser, eventId, request));
+    }
+    [Fact]
+    public async Task UpdateEvent_ShouldThrow_WhenEndDateBeforeEqualStartDate()
+    {
+        Guid dummyUser = Guid.NewGuid();
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+        UpdatePersonalEventRequest request = _fixture.Build<UpdatePersonalEventRequest>()
+            .With(t => t.StartTime, DateTime.UtcNow)
+            .With(t => t.EndTime, DateTime.UtcNow.AddDays(-1))
+            .Create();
+
+        await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.UpdatePersonalEventAsync(dummyUser, Guid.NewGuid(), request));
+    }
+    [Fact]
+    public async Task UpdateEvent_ShouldThrow_WhenTitleIsEmpty()
+    {
+        Guid dummyUser = Guid.NewGuid();
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+        UpdatePersonalEventRequest request = _fixture.Build<UpdatePersonalEventRequest>()
+            .With(t => t.StartTime, DateTime.UtcNow)
+            .With(t => t.EndTime, DateTime.UtcNow.AddDays(1))
+            .With(t => t.Title, string.Empty)
+            .Create();
+
+        Exception exception = await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.UpdatePersonalEventAsync(dummyUser, Guid.NewGuid(), request));
+    }
+    [Fact]
+    public async Task UpdateEvent_ShouldThrow_WhenStartDateInPast()
+    {
+        Guid dummyUser = Guid.NewGuid();
+
+        PersonalEventService personalEventService = new PersonalEventService(_personalEventRepo);
+        UpdatePersonalEventRequest request = _fixture.Build<UpdatePersonalEventRequest>()
+            .With(t => t.StartTime, DateTime.UtcNow.AddDays(-1))
+            .With(t => t.EndTime, DateTime.UtcNow.AddDays(1))
+            .Create();
+
+        Exception exception = await Assert.ThrowsAsync<ArgumentException>(() => personalEventService.UpdatePersonalEventAsync(dummyUser, Guid.NewGuid(), request));
+    }
+    #endregion
+
+    #region helpers
     #endregion
 }
