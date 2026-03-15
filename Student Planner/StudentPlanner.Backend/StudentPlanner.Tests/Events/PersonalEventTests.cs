@@ -1,13 +1,8 @@
 ﻿using StudentPlanner.Core.Application.PersonalEvents;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using AutoFixture;
 using Moq;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Core.Domain;
-using System.Runtime.CompilerServices;
-using Xunit.Internal;
 
 
 namespace StudentPlanner.Tests;
