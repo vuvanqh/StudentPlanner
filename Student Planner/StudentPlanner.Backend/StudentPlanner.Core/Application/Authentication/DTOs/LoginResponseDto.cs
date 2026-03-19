@@ -1,3 +1,5 @@
+namespace StudentPlanner.Core.Application.Authentication;
+
 public class LoginResponseDto
 {
     //session
@@ -10,7 +12,7 @@ public class LoginResponseDto
     [Required] 
     public string FirstName { get; set; } = null!;
     [Required] 
-    public string Surname { get; set; } = null!;
+    public string LastName { get; set; } = null!;
     [Required,EmailAddress] 
     public string Email { get; set; } = null!;
 }

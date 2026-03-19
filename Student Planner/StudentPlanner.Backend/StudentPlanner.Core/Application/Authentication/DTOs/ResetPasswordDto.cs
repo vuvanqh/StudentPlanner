@@ -1,3 +1,5 @@
+namespace StudentPlanner.Core.Application.Authentication;
+
 public class ResetPasswordDto
 {
     [Required]
