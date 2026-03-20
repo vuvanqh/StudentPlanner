@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentPlanner.Core.Application.Authentication;
 
-public record ForgotPasswordDto
+public record ForgotPasswordRequestDto
 {
     [Required]
     [EmailAddress]

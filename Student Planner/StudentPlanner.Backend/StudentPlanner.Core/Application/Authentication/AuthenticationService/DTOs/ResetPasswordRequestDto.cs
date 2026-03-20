@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentPlanner.Core.Application.Authentication;
 
-public record ResetPasswordDto
+public record ResetPasswordRequestDto
 {
     [Required]
     [EmailAddress(ErrorMessage = "Email is not in a valid email format")]

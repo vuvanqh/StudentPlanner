@@ -79,7 +79,7 @@ public class AuthenticationService : IAuthenticationService
         return new RegisterResponseDto { Success = true, Message = "Registration Successful" };
     }
 
-    public async Task ForgotPasswordAsync(ForgotPasswordDto request)
+    public async Task ForgotPasswordAsync(ForgotPasswordRequestDto request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user != null)
@@ -89,8 +89,8 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
-    public async Task ResetPasswordAsync(ResetPasswordDto request)
+    public async Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordRequestDto request)
     {
-        throw new NotImplementedException();
+       throw new NotImplementedException();
     }
 }

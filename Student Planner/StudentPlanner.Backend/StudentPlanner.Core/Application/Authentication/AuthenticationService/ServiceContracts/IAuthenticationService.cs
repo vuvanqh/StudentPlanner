@@ -6,6 +6,6 @@ public interface IAuthenticationService
 {
     Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto request);
     Task<LoginResponseDto> LoginAsync(LoginRequestDto request);
-    Task ForgotPasswordAsync(ForgotPasswordDto request);
-    Task ResetPasswordAsync(ResetPasswordDto request);
+    Task ForgotPasswordAsync(ForgotPasswordRequestDto request);
+    Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordRequestDto request);
 }

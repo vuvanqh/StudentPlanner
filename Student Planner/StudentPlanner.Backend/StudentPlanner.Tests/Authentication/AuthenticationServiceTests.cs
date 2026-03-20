@@ -234,7 +234,7 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task ForgotPasswordAsync_ShouldSendEmail_WhenUserExists()
     {
-        var request = new ForgotPasswordDto { Email = "user@pw.edu.pl" };
+        var request = new ForgotPasswordRequestDto { Email = "user@pw.edu.pl" };
         var user = new ApplicationUser { Email = request.Email, FirstName = "Test", LastName = "User" };
 
         _userManagerMock.Setup(x => x.FindByEmailAsync(request.Email)).ReturnsAsync(user);
@@ -248,7 +248,7 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task ForgotPasswordAsync_ShouldNotSendEmail_WhenUserDoesNotExist()
     {
-        var request = new ForgotPasswordDto { Email = "nonexistent@pw.edu.pl" };
+        var request = new ForgotPasswordRequestDto { Email = "nonexistent@pw.edu.pl" };
 
         _userManagerMock.Setup(x => x.FindByEmailAsync(request.Email)).ReturnsAsync((ApplicationUser?)null);
 
@@ -257,7 +257,89 @@ public class AuthenticationServiceTests
         _emailServiceMock.Verify(x => x.SendPasswordResetEmailAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
 
+        [Fact]
+    public void ResetPasswordRequestDto_ShouldFailValidation_WhenPasswordsDoNotMatch()
+    {
+        var request = new ResetPasswordRequestDto
+        {
+            Email = "user@pw.edu.pl",
+            Token = "mocked-token",
+            NewPassword = "NewPassword123!",
+            ConfirmNewPassword = "DifferentPassword!"
+        };
 
+        var context = new System.ComponentModel.DataAnnotations.ValidationContext(request);
+        var results = new System.Collections.Generic.List<System.ComponentModel.DataAnnotations.ValidationResult>();
+
+        var isValid = System.ComponentModel.DataAnnotations.Validator.TryValidateObject(request, context, results, true);
+
+        isValid.Should().BeFalse();
+        results.Should().Contain(x => x.ErrorMessage.Contains("match"));
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_ShouldSucceed_WhenValid()
+    {
+        var request = new ResetPasswordRequestDto
+        {
+            Email = "user@pw.edu.pl",
+            Token = "mocked-token",
+            NewPassword = "NewPassword123!",
+            ConfirmNewPassword = "NewPassword123!"
+        };
+        var user = new ApplicationUser { Email = request.Email, FirstName = "Test", LastName = "User" };
+
+        _userManagerMock.Setup(x => x.FindByEmailAsync(request.Email)).ReturnsAsync(user);
+        _userManagerMock.Setup(x => x.ResetPasswordAsync(user, request.Token, request.NewPassword)).ReturnsAsync(IdentityResult.Success);
+
+        var result = await _authService.ResetPasswordAsync(request);
+
+        _userManagerMock.Verify(x => x.ResetPasswordAsync(user, request.Token, request.NewPassword), Times.Once);
+        result.Success.Should().BeTrue();
+        result.Message.Should().Contain("successfully");
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_ShouldFail_WhenUserNotFound()
+    {
+        var request = new ResetPasswordRequestDto
+        {
+            Email = "nonexistent@pw.edu.pl",
+            Token = "mocked-token",
+            NewPassword = "NewPassword123!",
+            ConfirmNewPassword = "NewPassword123!"
+        };
+
+        _userManagerMock.Setup(x => x.FindByEmailAsync(request.Email)).ReturnsAsync((ApplicationUser?)null);
+
+        var result = await _authService.ResetPasswordAsync(request);
+
+        result.Success.Should().BeFalse();
+        result.Message.Should().Contain("user not found");
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_ShouldFail_WhenTokenIsInvalid()
+    {
+        var request = new ResetPasswordRequestDto
+        {
+            Email = "user@pw.edu.pl",
+            Token = "invalid-token",
+            NewPassword = "NewPassword123!",
+            ConfirmNewPassword = "NewPassword123!"
+        };
+        var user = new ApplicationUser { Email = request.Email, FirstName = "Test", LastName = "User" };
+
+        _userManagerMock.Setup(x => x.FindByEmailAsync(request.Email)).ReturnsAsync(user);
+        
+        var failedResult = IdentityResult.Failed(new IdentityError { Description = "Invalid token." });
+        _userManagerMock.Setup(x => x.ResetPasswordAsync(user, request.Token, request.NewPassword)).ReturnsAsync(failedResult);
+
+        var result = await _authService.ResetPasswordAsync(request);
+
+        result.Success.Should().BeFalse();
+        result.Message.Should().Contain("Invalid token");
+    }
 
    
 }
