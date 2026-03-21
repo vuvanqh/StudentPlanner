@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace StudentPlanner.Core.Domain;
+namespace StudentPlanner.Core;
 
 public class EventDetails: IEquatable<EventDetails> //represents a final validated data that is to be passed as a response so shouldnt be mutable?
 {
