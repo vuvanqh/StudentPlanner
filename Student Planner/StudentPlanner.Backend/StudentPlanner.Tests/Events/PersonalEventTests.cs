@@ -3,6 +3,7 @@ using AutoFixture;
 using Moq;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Core.Domain;
+using StudentPlanner.Core;
 
 
 namespace StudentPlanner.Tests;
