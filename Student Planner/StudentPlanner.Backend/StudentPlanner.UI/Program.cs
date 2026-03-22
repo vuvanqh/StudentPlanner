@@ -20,6 +20,8 @@ public class Program
 
 
         app.MapControllers();
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.Run();
     }

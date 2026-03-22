@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 namespace StudentPlanner.Core.Application.Authentication;
 
 public class LoginResponseDto
@@ -6,7 +7,7 @@ public class LoginResponseDto
     [Required] 
     public string AccessToken { get; set; } = null!;
     [Required] 
-    public DateTime ExpiresAt { get; set; } = null!;
+    public DateTime ExpiresAt { get; set; }
 
     //data
     [Required] 

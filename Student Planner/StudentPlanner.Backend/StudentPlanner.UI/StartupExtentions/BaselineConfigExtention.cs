@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using StudentPlanner.Infrastructure;
 using StudentPlanner.Infrastructure.IdentityEntities;
 using System.Text.Json.Serialization;
@@ -66,7 +67,14 @@ public static class BaselineConfigExtention
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        //swagger
+        services.AddEndpointsApiExplorer();
 
+        services.AddSwaggerGen(opt =>
+        {
+            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Student Planner API", Version = "v1" });
+        });
+        
         //authorization
         services.AddAuthorization();
     }
