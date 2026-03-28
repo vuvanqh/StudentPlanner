@@ -1,18 +1,11 @@
-import './App.css'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import IntroPage from './pages/IntroPage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
+import './styles/App.css'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './router'
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<IntroPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  )
+  return <>
+    <RouterProvider router={router}/>
+  </>
 }
 
 export default App
