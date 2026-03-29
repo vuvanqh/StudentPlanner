@@ -26,11 +26,14 @@ public class AuthenticationService : IAuthenticationService
     public async Task<(LoginResponseDto, RefreshTokenResult)> LoginAsync(LoginRequestDto request)
     {
         var user = await _identityService.SignInAsync(request.Email, request.Password);
+        var roles = await _identityService.GetUserRolesAsync(user);
+        var role = roles.FirstOrDefault() ?? UserRoleOptions.User.ToString();
+
         RefreshTokenResult refreshTokenResult = await _refreshTokenService.IssueOnLogin(user);
         return (new LoginResponseDto
         {
             Token = _jwtService.CreateToken(user),
-            ExpiresAt = DateTime.UtcNow.AddHours(2),
+            UserRole = role,
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email
@@ -50,8 +53,8 @@ public class AuthenticationService : IAuthenticationService
         {
             Id = Guid.NewGuid(),
             Email = request.Email,
-            FirstName = request.FirstName,
-            LastName = request.LastName
+            FirstName = "FirstNamePlaceholder",
+            LastName = "LastNamePlaceholder"
         };
         await _identityService.RegisterUser(user, request.Password, UserRoleOptions.User.ToString());
     }

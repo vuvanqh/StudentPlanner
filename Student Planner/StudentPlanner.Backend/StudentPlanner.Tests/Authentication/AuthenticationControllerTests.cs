@@ -33,7 +33,7 @@ public class AuthenticationControllerTests
     [Fact]
     public async Task Register_ShouldReturn201_WhenSuccess()
     {
-        var request = new RegisterRequestDto { Email = "test@pw.edu.pl", Password = "Password123!", FirstName = "John", LastName = "Doe" };
+        var request = new RegisterRequestDto { Email = "test@pw.edu.pl", Password = "Password123!" };
         _authServiceMock.Setup(s => s.RegisterAsync(request)).Returns(Task.CompletedTask);
 
         var result = await _controller.Register(request);
@@ -86,7 +86,7 @@ public class AuthenticationControllerTests
     public async Task Login_ShouldReturn200_WhenCredentialsValid()
     {
         var request = new LoginRequestDto { Email = "user@pw.edu.pl", Password = "Password123!" };
-        var loginResponse = new LoginResponseDto { Token = "jwt-token", Email = request.Email };
+        var loginResponse = new LoginResponseDto { Token = "jwt-token", Email = request.Email, UserRole = "User" };
         var refreshResult = new RefreshTokenResult { RefreshToken = "ref-token", ExpirationDate = DateTime.UtcNow.AddDays(7) };
 
         _authServiceMock.Setup(s => s.LoginAsync(request)).ReturnsAsync((loginResponse, refreshResult));

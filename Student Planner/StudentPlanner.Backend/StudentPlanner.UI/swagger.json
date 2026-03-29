@@ -1,11 +1,16 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.1",
   "info": {
-    "title": "Student Planner API",
-    "version": "v1"
+    "title": "StudentPlanner.UI | v1",
+    "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost:5049/"
+    }
+  ],
   "paths": {
-    "/api/authentication/register": {
+    "/api/auth/register": {
       "post": {
         "tags": [
           "Authentication"
@@ -24,14 +29,15 @@
                 "$ref": "#/components/schemas/RegisterRequestDto"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
             "description": "Created"
           },
           "409": {
-            "description": "Conflict",
+            "description": "Account with this email already exists",
             "content": {
               "application/json": {
                 "schema": {
@@ -41,7 +47,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Invalid data format or other error",
             "content": {
               "application/json": {
                 "schema": {
@@ -53,7 +59,7 @@
         }
       }
     },
-    "/api/authentication/login": {
+    "/api/auth/login": {
       "post": {
         "tags": [
           "Authentication"
@@ -72,7 +78,8 @@
                 "$ref": "#/components/schemas/LoginRequestDto"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -86,7 +93,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Invalid credentials",
             "content": {
               "application/json": {
                 "schema": {
@@ -98,7 +105,7 @@
         }
       }
     },
-    "/api/authentication/refreshtoken": {
+    "/api/auth/refreshtoken": {
       "post": {
         "tags": [
           "Authentication"
@@ -116,7 +123,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Token expired",
             "content": {
               "application/json": {
                 "schema": {
@@ -128,7 +135,7 @@
         }
       }
     },
-    "/api/authentication/reset-password": {
+    "/api/auth/reset-password": {
       "post": {
         "tags": [
           "Authentication"
@@ -147,16 +154,17 @@
                 "$ref": "#/components/schemas/ForgotPasswordRequestDto"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "200 OK."
           }
         }
       }
     },
-    "/api/authentication/verify-reset": {
+    "/api/auth/verify-reset": {
       "post": {
         "tags": [
           "Authentication"
@@ -175,14 +183,15 @@
                 "$ref": "#/components/schemas/ResetPasswordRequestDto"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The reset token is either invalid or expired",
             "content": {
               "application/json": {
                 "schema": {
@@ -192,7 +201,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "User not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -214,12 +223,9 @@
         "type": "object",
         "properties": {
           "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "LoginRequestDto": {
         "required": [
@@ -229,135 +235,122 @@
         "type": "object",
         "properties": {
           "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
+            "type": "string"
           },
           "password": {
-            "minLength": 1,
             "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "LoginResponseDto": {
         "type": "object",
         "properties": {
           "token": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
-          "expiresAt": {
-            "type": "string",
-            "format": "date-time"
+          "userRole": {
+            "type": "string"
           },
           "firstName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "lastName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "email": {
-            "type": "string",
-            "format": "email",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ProblemDetails": {
         "type": "object",
         "properties": {
           "type": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           },
           "detail": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "null",
+              "string"
+            ]
           }
-        },
-        "additionalProperties": { }
+        }
       },
       "RegisterRequestDto": {
         "required": [
-          "confirmPassword",
           "email",
-          "firstName",
-          "lastName",
-          "password"
+          "password",
+          "confirmPassword"
         ],
         "type": "object",
         "properties": {
           "email": {
-            "minLength": 1,
             "pattern": "^[a-zA-Z0-9._%+-]+@pw\\.edu\\.pl$",
-            "type": "string",
-            "format": "email"
+            "type": "string"
           },
           "password": {
-            "minLength": 1,
             "type": "string"
           },
           "confirmPassword": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "firstName": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "lastName": {
-            "minLength": 1,
             "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ResetPasswordRequestDto": {
         "required": [
-          "confirmNewPassword",
           "email",
+          "token",
           "newPassword",
-          "token"
+          "confirmNewPassword"
         ],
         "type": "object",
         "properties": {
           "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
+            "type": "string"
           },
           "token": {
-            "minLength": 1,
             "type": "string"
           },
           "newPassword": {
-            "minLength": 1,
             "type": "string"
           },
           "confirmNewPassword": {
-            "minLength": 1,
             "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Authentication"
+    }
+  ]
 }

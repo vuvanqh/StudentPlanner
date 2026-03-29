@@ -8,7 +8,7 @@ namespace StudentPlanner.UI.Controllers;
 /// <summary>
 /// Unified controller for account management and authentication.
 /// </summary>
-[Route("api/[controller]")]
+[Route("api/auth")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
