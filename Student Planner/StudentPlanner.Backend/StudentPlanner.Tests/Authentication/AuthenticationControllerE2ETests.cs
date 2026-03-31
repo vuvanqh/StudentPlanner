@@ -11,8 +11,15 @@ using Microsoft.AspNetCore.Identity;
 
 namespace StudentPlanner.Tests.Authentication;
 
+/// <summary>
+/// End-to-end tests for the AuthenticationController.
+/// </summary>
 public class AuthenticationControllerE2ETests : IntegrationTestBase
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthenticationControllerE2ETests"/> class.
+    /// </summary>
+    /// <param name="factory">The web application factory.</param>
     public AuthenticationControllerE2ETests(StudentPlannerWebApplicationFactory factory) : base(factory)
     {
     }

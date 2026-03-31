@@ -21,6 +21,9 @@ namespace StudentPlanner.Tests;
 public class StudentPlannerWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly string _dbName;
+    /// <summary>
+    /// Gets the mock for the IEmailService.
+    /// </summary>
     public Mock<IEmailService> EmailServiceMock { get; } = new();
 
     public StudentPlannerWebApplicationFactory()
@@ -28,6 +31,10 @@ public class StudentPlannerWebApplicationFactory : WebApplicationFactory<Program
         _dbName = "StudentPlanner_Test_" + Guid.NewGuid().ToString("N");
     }
 
+    /// <summary>
+    /// Gets the connection string for the test-specific database.
+    /// </summary>
+    /// <returns>The connection string.</returns>
     public string GetConnectionString()
     {
         return $"Data Source=.;Initial Catalog={_dbName};Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;";
@@ -76,7 +83,11 @@ public class StudentPlannerWebApplicationFactory : WebApplicationFactory<Program
         await db.Database.MigrateAsync();
     }
 
-    public async ValueTask DisposeAsync()
+    /// <summary>
+    /// Cleans up the test-specific database and base resources.
+    /// </summary>
+    /// <returns>A value task.</returns>
+    public override async ValueTask DisposeAsync()
     {
         try
         {
@@ -88,5 +99,7 @@ public class StudentPlannerWebApplicationFactory : WebApplicationFactory<Program
         {
             // Silently ignore if already disposed during teardown
         }
+
+        await base.DisposeAsync();
     }
 }
