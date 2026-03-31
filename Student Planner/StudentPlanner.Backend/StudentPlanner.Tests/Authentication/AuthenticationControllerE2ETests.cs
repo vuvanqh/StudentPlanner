@@ -88,7 +88,7 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
         var email = "loginuser@pw.edu.pl";
         var password = "Password123!";
         var loginRequest = new LoginRequestDto { Email = email, Password = password };
- 
+
         var registerResponse = await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequestDto
         {
             Email = email,
@@ -97,10 +97,10 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
         }, TestContext.Current.CancellationToken);
         if (!registerResponse.IsSuccessStatusCode)
         {
-            var body = await registerResponse.Content.ReadAsStringAsync();
+            var body = await registerResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             throw new Exception($"Registration failed in Login_Success_200. Status: {registerResponse.StatusCode}, Body: {body}");
         }
- 
+
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest, TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -155,7 +155,7 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
         }, TestContext.Current.CancellationToken);
         if (!registerResponse.IsSuccessStatusCode)
         {
-            var body = await registerResponse.Content.ReadAsStringAsync();
+            var body = await registerResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             throw new Exception($"Registration failed in ResetPassword_Success_200. Status: {registerResponse.StatusCode}, Body: {body}");
         }
 
@@ -221,7 +221,7 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
         }, TestContext.Current.CancellationToken);
         if (!registerResponse.IsSuccessStatusCode)
         {
-            var body = await registerResponse.Content.ReadAsStringAsync();
+            var body = await registerResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             throw new Exception($"Registration failed in ResetPassword_InvalidToken_400. Status: {registerResponse.StatusCode}, Body: {body}");
         }
 
@@ -249,14 +249,14 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
         }, TestContext.Current.CancellationToken);
         if (!registerResponse.IsSuccessStatusCode)
         {
-            var body = await registerResponse.Content.ReadAsStringAsync();
+            var body = await registerResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             throw new Exception($"Registration failed in RefreshToken_Success_200. Status: {registerResponse.StatusCode}, Body: {body}");
         }
 
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", new LoginRequestDto { Email = email, Password = password }, TestContext.Current.CancellationToken);
         if (!loginResponse.IsSuccessStatusCode)
         {
-            var body = await loginResponse.Content.ReadAsStringAsync();
+            var body = await loginResponse.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
             throw new Exception($"Login failed in RefreshToken_Success_200. Status: {loginResponse.StatusCode}, Body: {body}");
         }
 

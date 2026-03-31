@@ -71,7 +71,7 @@ public class AuthenticationServiceTests
         _identityServiceMock.Setup(s => s.RegisterUser(It.IsAny<User>(), request.Password, It.IsAny<string?>())).Returns(Task.CompletedTask);
         _usosAuthServiceMock.Setup(s => s.LoginAsync(request.Email, request.Password)).ReturnsAsync(true);
         await _authService.RegisterAsync(request);
- 
+
         _identityServiceMock.Verify(s => s.RegisterUser(
             It.Is<User>(u => u.Email == request.Email && u.FirstName == "FirstNamePlaceholder" && u.LastName == "LastNamePlaceholder"),
             request.Password,
