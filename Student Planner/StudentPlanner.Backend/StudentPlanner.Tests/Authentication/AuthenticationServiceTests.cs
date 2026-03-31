@@ -46,8 +46,7 @@ public class AuthenticationServiceTests
         var request = new RegisterRequestDto
         {
             Email = "test@pw.edu.pl",
-            Password = "Password123!",
-            ConfirmPassword = "Password123!"
+            Password = "Password123!"
         };
 
         var existingUser = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "Existing", LastName = "User" };
@@ -63,8 +62,7 @@ public class AuthenticationServiceTests
         var request = new RegisterRequestDto
         {
             Email = "test@pw.edu.pl",
-            Password = "Password123!",
-            ConfirmPassword = "Password123!"
+            Password = "Password123!"
         };
 
         _userRepoMock.Setup(repo => repo.GetUserByEmailAsync(request.Email)).ReturnsAsync((User?)null);
@@ -76,6 +74,25 @@ public class AuthenticationServiceTests
             It.Is<User>(u => u.Email == request.Email && u.FirstName == "FirstNamePlaceholder" && u.LastName == "LastNamePlaceholder"),
             request.Password,
             It.IsAny<string?>()), Times.Once);
+        _usosAuthServiceMock.Verify(s => s.LoginAsync(request.Email, request.Password), Times.Once);
+    }
+
+    [Fact]
+    public async Task RegisterAsync_ShouldThrowException_WhenUsosLoginFails()
+    {
+        var request = new RegisterRequestDto
+        {
+            Email = "test@pw.edu.pl",
+            Password = "WrongPassword!"
+        };
+
+        _userRepoMock.Setup(repo => repo.GetUserByEmailAsync(request.Email)).ReturnsAsync((User?)null);
+        _usosAuthServiceMock.Setup(s => s.LoginAsync(request.Email, request.Password)).ReturnsAsync(false);
+
+        Func<Task> act = async () => await _authService.RegisterAsync(request);
+
+        await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("Invalid USOS credentials.");
+        _identityServiceMock.Verify(s => s.RegisterUser(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string?>()), Times.Never);
     }
 
     [Fact]
