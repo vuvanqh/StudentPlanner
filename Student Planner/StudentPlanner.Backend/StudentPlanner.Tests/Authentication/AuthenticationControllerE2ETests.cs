@@ -63,6 +63,19 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
     }
 
     [Fact]
+    public async Task Register_InvalidPassword_400()
+    {
+        var request = new RegisterRequestDto
+        {
+            Email = "invalidpass@pw.edu.pl",
+            Password = "1", // too short, should fail identity rules
+            ConfirmPassword = "1"
+        };
+        var response = await _client.PostAsJsonAsync("/api/auth/register", request, TestContext.Current.CancellationToken);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task Login_Success_200()
     {
         var email = "loginuser@pw.edu.pl";
@@ -99,7 +112,7 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task ForgotPassword_AlwaysSuccess_200()
+    public async Task ForgotPassword_EmailFound_200()
     {
         var request = new ForgotPasswordRequestDto { Email = "any@pw.edu.pl" };
 
@@ -108,29 +121,11 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task RefreshToken_Success_200()
+    public async Task ForgotPassword_EmailNotFound_200()
     {
-        var email = "refresh@pw.edu.pl";
-        var password = "Password123!";
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequestDto
-        {
-            Email = email,
-            Password = password,
-            ConfirmPassword = password
-        }, TestContext.Current.CancellationToken);
-
-        await _client.PostAsJsonAsync("/api/auth/login", new LoginRequestDto { Email = email, Password = password }, TestContext.Current.CancellationToken);
-
-        var response = await _client.PostAsync("/api/auth/refreshToken", null, TestContext.Current.CancellationToken);
-
-        if (response.StatusCode != HttpStatusCode.OK)
-        {
-            var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-            throw new Exception($"Expected OK but got {response.StatusCode}. Body: {body}");
-        }
+        var request = new ForgotPasswordRequestDto { Email = "nonexistent@pw.edu.pl" };
+        var response = await _client.PostAsJsonAsync("/api/auth/reset-password", request, TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var newToken = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-        newToken.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
@@ -177,5 +172,93 @@ public class AuthenticationControllerE2ETests : IntegrationTestBase
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", new LoginRequestDto { Email = email, Password = newPassword }, TestContext.Current.CancellationToken);
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task ResetPassword_UserNotFound_404()
+    {
+        var request = new ResetPasswordRequestDto
+        {
+            Email = "missing-user@pw.edu.pl",
+            Token = "some-token",
+            NewPassword = "NewPassword123!",
+            ConfirmNewPassword = "NewPassword123!"
+        };
+        var response = await _client.PostAsJsonAsync("/api/auth/verify-reset", request, TestContext.Current.CancellationToken);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task ResetPassword_InvalidToken_400()
+    {
+        var email = "valid-user@pw.edu.pl";
+        var password = "OldPassword123!";
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequestDto
+        {
+            Email = email,
+            Password = password,
+            ConfirmPassword = password
+        }, TestContext.Current.CancellationToken);
+
+        var request = new ResetPasswordRequestDto
+        {
+            Email = email,
+            Token = "invalid-token",
+            NewPassword = "NewPassword123!",
+            ConfirmNewPassword = "NewPassword123!"
+        };
+        var response = await _client.PostAsJsonAsync("/api/auth/verify-reset", request, TestContext.Current.CancellationToken);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task RefreshToken_Success_200()
+    {
+        var email = "refresh@pw.edu.pl";
+        var password = "Password123!";
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequestDto
+        {
+            Email = email,
+            Password = password,
+            ConfirmPassword = password
+        }, TestContext.Current.CancellationToken);
+
+        await _client.PostAsJsonAsync("/api/auth/login", new LoginRequestDto { Email = email, Password = password }, TestContext.Current.CancellationToken);
+
+        var response = await _client.PostAsync("/api/auth/refreshToken", null, TestContext.Current.CancellationToken);
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+            throw new Exception($"Expected OK but got {response.StatusCode}. Body: {body}");
+        }
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var newToken = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        newToken.Should().NotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public async Task RefreshToken_NoCookie_401()
+    {
+        var response = await _client.PostAsync("/api/auth/refreshToken", null, TestContext.Current.CancellationToken);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RefreshToken_InvalidToken_401()
+    {
+        var cookieContainer = new CookieContainer();
+        cookieContainer.Add(new Cookie("refreshToken", "invalid-token", "/api/auth", "localhost"));
+
+        using var handler = new HttpClientHandler { CookieContainer = cookieContainer };
+        using var tempClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { BaseAddress = new Uri("https://localhost") });
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/auth/refreshToken");
+        request.Headers.Add("Cookie", "refreshToken=invalid-token");
+        var response = await _client.SendAsync(request, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+
 }
 

@@ -177,8 +177,45 @@ WHERE [a].[NormalizedEmail] = @normalizedEmail
 2026-03-30 20:04:26.502 +02:00 [INF] Application started. Press Ctrl+C to shut down.
 2026-03-30 20:04:26.504 +02:00 [INF] Hosting environment: Development
 2026-03-30 20:04:26.506 +02:00 [INF] Content root path: C:\Users\Hoang\Desktop\Uni\Semester 6\SE2\Student Planner\StudentPlanner.Backend\StudentPlanner.UI
-2026-03-31 17:54:49.397 +02:00 [INF] User profile is available. Using 'C:\Users\Hoang\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
-2026-03-31 17:54:50.107 +02:00 [INF] Now listening on: http://localhost:5049
-2026-03-31 17:54:50.821 +02:00 [INF] Application started. Press Ctrl+C to shut down.
-2026-03-31 17:54:50.829 +02:00 [INF] Hosting environment: Development
-2026-03-31 17:54:50.835 +02:00 [INF] Content root path: C:\Users\Hoang\Desktop\Uni\Semester 6\SE2\Student Planner\StudentPlanner.Backend\StudentPlanner.UI
+2026-03-31 16:57:31.512 +02:00 [INF] User profile is available. Using 'C:\Users\piotrek\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-03-31 16:57:31.776 +02:00 [INF] Now listening on: http://localhost:5049
+2026-03-31 16:57:31.782 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-31 16:57:31.785 +02:00 [INF] Hosting environment: Development
+2026-03-31 16:57:31.788 +02:00 [INF] Content root path: C:\Users\piotrek\Desktop\PW\SE2\SE2\Student Planner\StudentPlanner.Backend\StudentPlanner.UI
+2026-03-31 20:43:57.136 +02:00 [INF] User profile is available. Using 'C:\Users\piotrek\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-03-31 20:43:57.459 +02:00 [INF] Now listening on: http://localhost:5049
+2026-03-31 20:43:57.468 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-31 20:43:57.471 +02:00 [INF] Hosting environment: Development
+2026-03-31 20:43:57.474 +02:00 [INF] Content root path: C:\Users\piotrek\Desktop\PW\SE2\SE2\Student Planner\StudentPlanner.Backend\StudentPlanner.UI
+2026-03-31 20:44:42.387 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/ - null null
+2026-03-31 20:44:42.597 +02:00 [INF] HTTP GET / responded 404 in 58.6060 ms
+2026-03-31 20:44:42.614 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/ - 404 0 null 229.4583ms
+2026-03-31 20:44:42.634 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5049/, Response status code: 404
+2026-03-31 20:44:49.090 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger - null null
+2026-03-31 20:44:49.110 +02:00 [INF] HTTP GET /swagger responded 301 in 5.0747 ms
+2026-03-31 20:44:49.120 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger - 301 0 null 30.8934ms
+2026-03-31 20:44:49.135 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/index.html - null null
+2026-03-31 20:44:49.377 +02:00 [INF] HTTP GET /swagger/index.html responded 200 in 227.8270 ms
+2026-03-31 20:44:49.420 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/swagger-ui.css - null null
+2026-03-31 20:44:49.431 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/index.js - null null
+2026-03-31 20:44:49.431 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/swagger-ui-standalone-preset.js - null null
+2026-03-31 20:44:49.433 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/index.css - null null
+2026-03-31 20:44:49.436 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/swagger-ui-bundle.js - null null
+2026-03-31 20:44:49.489 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/index.html - 200 null text/html;charset=utf-8 354.1467ms
+2026-03-31 20:44:49.654 +02:00 [INF] HTTP GET /swagger/index.js responded 200 in 3.7753 ms
+2026-03-31 20:44:49.655 +02:00 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 74.1395 ms
+2026-03-31 20:44:49.692 +02:00 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 18.4185 ms
+2026-03-31 20:44:49.882 +02:00 [INF] HTTP GET /swagger/index.css responded 200 in 0.5209 ms
+2026-03-31 20:44:50.106 +02:00 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 88.6242 ms
+2026-03-31 20:44:50.110 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/index.js - 200 null application/javascript;charset=utf-8 679.0281ms
+2026-03-31 20:44:50.113 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/swagger-ui.css - 200 26479 text/css 692.5985ms
+2026-03-31 20:44:50.116 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/swagger-ui-standalone-preset.js - 200 76613 text/javascript 685.2985ms
+2026-03-31 20:44:50.120 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/index.css - 200 152 text/css 686.9914ms
+2026-03-31 20:44:50.126 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/swagger-ui-bundle.js - 200 418181 text/javascript 690.1964ms
+2026-03-31 20:44:50.556 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/v1/swagger.json - null null
+2026-03-31 20:44:50.594 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5049/swagger/favicon-32x32.png - null null
+2026-03-31 20:44:50.610 +02:00 [INF] HTTP GET /swagger/favicon-32x32.png responded 200 in 5.0355 ms
+2026-03-31 20:44:50.669 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/favicon-32x32.png - 200 628 image/png 75.159ms
+2026-03-31 20:44:51.005 +02:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 442.6036 ms
+2026-03-31 20:44:51.010 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5049/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 453.7046ms
+2026-03-31 20:51:44.632 +02:00 [INF] Application is shutting down...

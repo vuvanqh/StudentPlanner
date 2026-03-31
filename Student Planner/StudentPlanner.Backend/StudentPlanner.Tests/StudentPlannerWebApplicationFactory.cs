@@ -49,7 +49,7 @@ public class StudentPlannerWebApplicationFactory : WebApplicationFactory<Program
         builder.UseSetting("RefreshToken:expiration_minutes", "60");
         builder.UseSetting("RefreshToken:max_session_lifetime_days", "30");
 
-        builder.ConfigureLogging(logging => 
+        builder.ConfigureLogging(logging =>
         {
             logging.ClearProviders();
             logging.AddConfiguration(new ConfigurationBuilder().Build()); // Empty config for default logging
@@ -71,7 +71,7 @@ public class StudentPlannerWebApplicationFactory : WebApplicationFactory<Program
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        
+
         // Ensure the database is created and all migrations are applied
         await db.Database.MigrateAsync();
     }
