@@ -90,7 +90,7 @@ public class PersonalEventController : ControllerBase
             return Unauthorized(new { Message = "Unauthorized access" });
 
         var resp = await _personalEventService.CreatePersonalEventAsync(Guid.Parse(userId), request);
-        return Ok(new {EventId = resp, Message = "Success"});
+        return Ok(new { EventId = resp, Message = "Success" });
     }
 
     /// <summary>
@@ -130,7 +130,7 @@ public class PersonalEventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateEvent([FromRoute]Guid eventId, UpdatePersonalEventRequest request)
+    public async Task<IActionResult> UpdateEvent([FromRoute] Guid eventId, UpdatePersonalEventRequest request)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId == null)
