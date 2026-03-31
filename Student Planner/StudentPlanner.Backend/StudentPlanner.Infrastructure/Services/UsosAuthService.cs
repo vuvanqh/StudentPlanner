@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using StudentPlanner.Core.Application.Authentication;
 using StudentPlanner.Infrastructure.Services.Settings;
 namespace StudentPlanner.Infrastructure.Services;
+
 public class UsosAuthService : IUsosAuthService
 {
     private readonly HttpClient _httpClient;
@@ -25,8 +26,8 @@ public class UsosAuthService : IUsosAuthService
         }
 
         _httpClient.BaseAddress = new Uri(settings.BaseUrl);
-    } 
-     public async Task<bool> LoginAsync(string email, string password)
+    }
+    public async Task<bool> LoginAsync(string email, string password)
     {
         var request = new
         {
@@ -56,26 +57,4 @@ public class UsosAuthService : IUsosAuthService
             return false;
         }
     }
-    // private sealed class UsosLoginRequest
-    // {
-    //     public string student_email { get; set; } = string.Empty;
-    //     public string password { get; set; } = string.Empty;
-
-    //     public string StudentEmail
-    //     {
-    //         get => student_email;
-    //         set => student_email = value;
-    //     }
-
-    //     public string Password
-    //     {
-    //         get => password;
-    //         set => password = value;
-    //     }
-    // }
-
-    // private sealed class UsosLoginResponse
-    // {
-    //     public string Token { get; set; } = string.Empty;
-    // }
 }
