@@ -1,5 +1,6 @@
 using Serilog;
-
+using StudentPlanner.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 namespace StudentPlanner.Backend;
 
 /// <summary>
@@ -31,7 +32,12 @@ public class Program
         });
 
         var app = builder.Build();
-
+        if (Environment.GetEnvironmentVariable("USE_IN_MEMORY_DATABASE") != "true")
+        {
+             using var scope = app.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            dbContext.Database.Migrate();
+        }
         app.UseRouting();
 
         app.UseAuthorization();
