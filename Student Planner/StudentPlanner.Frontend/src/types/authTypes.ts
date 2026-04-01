@@ -8,13 +8,10 @@ export type loginResponse = {
   firstName: string,
   lastName: string,
   email: string,
-  role: string
+  userRole: string
 }
 
 export type registerRequest = {
-    firstName: string,
-    lastName: string,
     email: string,
     password: string
-    confirmPassword: string
 }

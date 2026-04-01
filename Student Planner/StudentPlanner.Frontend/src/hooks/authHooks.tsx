@@ -7,7 +7,7 @@ import { queryClient } from "../api/queryClient";
 const loginFn = async(data: loginRequest) => {
     const resp = (await loginApi(data)) as loginResponse;
     localStorage.setItem("token",resp.token);
-    localStorage.setItem("role",resp.role);
+    localStorage.setItem("role",resp.userRole);
     queryClient.setQueryData(["user"], resp);
     return resp;
 }
@@ -19,7 +19,7 @@ export function useAuth(){
     const {mutateAsync, isPending: isLoginPending} = useMutation({
         mutationFn: loginFn,
         onSuccess: () => {
-            navigate("/main")
+            navigate(`/${localStorage.getItem("role")}`)
         },
         onError: ()=> {console.log("error")}
     })

@@ -1,7 +1,8 @@
-import { useActionState, useEffect } from 'react'
+import { useActionState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Modal from '../../components/modals/Modal'
 import Input from '../../components/common/Input';
+import { useAuth } from '../../hooks/authHooks';
 
 type stateType = {
   email: string,
@@ -10,7 +11,7 @@ type stateType = {
   errors?: string | null
 }
 
-const initial_state = {
+const initial_state: stateType = {
   email: "",
   password: "",
   success: false,
@@ -18,36 +19,55 @@ const initial_state = {
 }
 
 
-function handleAction(_: stateType, formData: FormData): Promise<stateType>{
+export default function RegisterPage() {
+  const location = useLocation();
+  const isRegisterOpen = location.pathname == "/register";
+  const navigate = useNavigate();
+  const {registerUser} = useAuth();
+
+  async function handleAction(_: stateType, formData: FormData){
     const data = {
         email: formData.get('email') as string,
         password: formData.get('password') as string
     }
 
+    if (data.email.trim().length === 0|| data.password.length===0) {
+      return {
+        email: '',
+        password: '',
+        errors: ['Invalid form data']
+      }
+    }
+
     //submit data
-
-    return new Promise(resolve => setTimeout(()=>{
-        const isSuccess = Math.random()%2==0
-        resolve({
-            email: data.email,
-            password: '',
-            success: isSuccess,
-            errors: isSuccess ? null : "invalid credentials"
-        });
-    }, 1000))
-}
-
-export default function RegisterPage() {
-  const location = useLocation();
-  const isRegisterOpen = location.pathname == "/register";
-  const navigate = useNavigate();
+    try {
+      await registerUser(data);
+      return {
+        email: data.email,
+        password: '',
+        errors: null
+      }
+    }
+    catch(err: any)
+    {
+      const raw = err.info?.errors;
+      let errors = [];
+      if (Array.isArray(raw)) 
+          errors.push(...raw);
+      
+      if (typeof raw === "string") 
+          errors.push(raw);
+      
+      return {
+        email: data.email,
+        password: '',
+        errors: ["invalid credentials", ...errors]
+      }
+    }
+  }
 
   const [state,formAction] = useActionState(handleAction, initial_state);
 
-  useEffect(()=>{
-    if(state.success && state.errors==null)
-        navigate("/");
-  }, [state, navigate])
   
   function emailValidator(e: React.ChangeEvent<HTMLInputElement>){
         const input = e.currentTarget;
