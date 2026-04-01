@@ -7,66 +7,66 @@ import { useAuth } from '../../hooks/authHooks';
 type stateType = {
   email: string,
   password: string,
+  confirmPassword: string,
   success: boolean,
-  errors?: string | null
+  errors: string[]
 }
 
 const initial_state: stateType = {
   email: "",
   password: "",
+  confirmPassword: "",
   success: false,
-  errors: null
+  errors: []
 }
-
 
 export default function RegisterPage() {
   const location = useLocation();
   const isRegisterOpen = location.pathname == "/register";
   const navigate = useNavigate();
-  const {registerUser} = useAuth();
+  const {registerUser, isRegisterPending} = useAuth();
+  const [state,formAction] = useActionState(handleAction, initial_state);
+
 
   async function handleAction(_: stateType, formData: FormData){
-    const data = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string
-    }
+      const data = {
+          email: formData.get('email') as string,
+          password: formData.get('password') as string,
+          confirmPassword: formData.get('confirmPassword') as string
+      }
 
-    if (data.email.trim().length === 0|| data.password.length===0) {
-      return {
-        email: '',
-        password: '',
-        errors: ['Invalid form data']
+      if(data.password!=data.confirmPassword){
+          return {
+            ...data,
+            success: false,
+            errors: ["Passwords don't match"]
+          }
       }
-    }
 
-    //submit data
-    try {
-      await registerUser(data);
-      return {
-        email: data.email,
-        password: '',
-        errors: null
+      try{
+        await registerUser(data);
+        return {
+          ...data,
+          errors: [],
+          success: true
+        }
       }
-    }
-    catch(err: any)
-    {
-      const raw = err.info?.errors;
-      let errors = [];
-      if (Array.isArray(raw)) 
-          errors.push(...raw);
-      
-      if (typeof raw === "string") 
-          errors.push(raw);
-      
-      return {
-        email: data.email,
-        password: '',
-        errors: ["invalid credentials", ...errors]
+      catch(err: any){
+        const raw = err.info?.errors;
+        let errors = [];
+        if (Array.isArray(raw)) 
+            errors.push(...raw);
+        
+        if (typeof raw === "string") 
+            errors.push(raw);
+        
+        return {
+          ...data,
+          success: false,
+          errors: ["invalid credentials", ...errors]
+        }
       }
-    }
   }
-
-  const [state,formAction] = useActionState(handleAction, initial_state);
 
   
   function emailValidator(e: React.ChangeEvent<HTMLInputElement>){
@@ -76,6 +76,7 @@ export default function RegisterPage() {
         input.setCustomValidity(valid ? "" : "Use @pw.edu.pl email");
         input.reportValidity();
   }
+
   //TO-DO: DISABLE CREATE BUTTON WHILE IS PENDING
   return (
     <Modal open={isRegisterOpen} className="register-page" onClose={()=>navigate("/")}>    
@@ -85,10 +86,13 @@ export default function RegisterPage() {
             <Input type="email" id="email" label="University Email" defaultValue={state.email}
                 pattern="^[^@]+@pw\.edu\.pl$" onChange={emailValidator}/>
 
-            <Input type="password" id="password" label="Password" defaultValue={state.password}
-                error={state.errors}/>
-          
-          <button type="submit">Create Account</button> 
+            <div className='form-row'>
+              <Input type="password" id="password" label="Password" defaultValue={state.password}/>
+              <Input type="password" id="confirmPassword" label="Confirm Password" defaultValue={state.password}/>
+            </div>
+
+            {state.errors?.map(error => <small className="error-text" key={error}>{error}</small>)}
+          <button type="submit" disabled={isRegisterPending}>Create Account</button> 
         </form>
     </Modal>
   )

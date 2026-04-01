@@ -3,6 +3,7 @@ import { login as loginApi, register } from "../api/authApi";
 import type { loginRequest, loginResponse } from "../types/authTypes";
 import { useNavigate } from "react-router-dom";
 import { queryClient } from "../api/queryClient";
+import { successMessage, errorMessage } from "../toast/toastNotifications";
 
 const loginFn = async(data: loginRequest) => {
     const resp = (await loginApi(data)) as loginResponse;
@@ -19,21 +20,25 @@ export function useAuth(){
     const {mutateAsync, isPending: isLoginPending} = useMutation({
         mutationFn: loginFn,
         onSuccess: () => {
-            navigate(`/${localStorage.getItem("role")}`)
+            successMessage("Logged in successfully!");
+            navigate(`/${localStorage.getItem("role")?.toLocaleLowerCase()}`)
         },
-        onError: ()=> {console.log("error")}
+        onError: (error)=> {errorMessage(error.message)}
     })
 
-    const {mutate: registerUser} = useMutation({
+    const {mutate: registerUser, isPending: isRegisterPending} = useMutation({
         mutationFn: register,
         onSuccess: () => {
+            successMessage("Registered in successfully! Feel free to log in now.");
             navigate("/")
-        }
+        },
+        onError: (error)=> {errorMessage(error.message)}
     })
     return {
         login: mutateAsync, 
         registerUser,
         isAuthenticated: !!localStorage.getItem("token"),
-        isLoginPending
+        isLoginPending,
+        isRegisterPending
     }
 }
