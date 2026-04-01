@@ -1028,3 +1028,145 @@ MailKit.Net.Smtp.SmtpProtocolException: The SMTP server has unexpectedly disconn
    at MailKit.Net.Smtp.SmtpClient.SendCommandInternalAsync(String command, CancellationToken cancellationToken)
    at MailKit.Net.Smtp.SmtpClient.AuthenticateAsync(Encoding encoding, ICredentials credentials, CancellationToken cancellationToken)
    at StudentPlanner.Infrastructure.Services.MailtrapEmailService.SendPasswordResetEmailAsync(String email, String token) in C:\Users\Hoang\Desktop\Uni\Semester 6\SE2\Student Planner\StudentPlanner.Backend\StudentPlanner.Infrastructure\Services\MailtrapEmailService.cs:line 43
+2026-04-01 15:34:34.416 +02:00 [INF] User profile is available. Using 'C:\Users\Hoang\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-01 15:34:36.330 +02:00 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2026-04-01 15:34:39.388 +02:00 [INF] Executed DbCommand (93ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Faculties] AS [f]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-04-01 15:34:39.860 +02:00 [INF] Now listening on: http://localhost:5049
+2026-04-01 15:34:40.772 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-01 15:34:40.774 +02:00 [INF] Hosting environment: Development
+2026-04-01 15:34:40.777 +02:00 [INF] Content root path: C:\Users\Hoang\Desktop\Uni\Semester 6\SE2\Student Planner\StudentPlanner.Backend\StudentPlanner.UI
+2026-04-01 15:34:52.320 +02:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5049/api/auth/login - null null
+2026-04-01 15:34:52.722 +02:00 [INF] CORS policy execution successful.
+2026-04-01 15:34:52.746 +02:00 [INF] HTTP OPTIONS /api/auth/login responded 204 in 25.4817 ms
+2026-04-01 15:34:52.789 +02:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5049/api/auth/login - 204 null null 500.5778ms
+2026-04-01 15:34:52.822 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost:5049/api/auth/login - application/json 50
+2026-04-01 15:34:52.881 +02:00 [INF] Failed to validate the token.
+System.ArgumentException: IDX14101: Unable to decode the payload '[PII of type 'Microsoft.IdentityModel.Logging.SecurityArtifact' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]' as Base64Url encoded string.
+ ---> System.Text.Json.JsonException: IDX11020: The JSON value of type: 'String', could not be converted to 'JsonTokenType.String'. Reading: 'Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.iat', Position: '97', CurrentDepth: '1', BytesConsumed: '118'.
+   at Microsoft.IdentityModel.Tokens.Json.JsonSerializerPrimitives.ReadLong(Utf8JsonReader& reader, String propertyName, String className, Boolean read)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadPayloadValue(Utf8JsonReader& reader, IDictionary`2 claims)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.CreatePayloadClaimSet(ReadOnlySpan`1 byteSpan)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.CreateClaimSet(ReadOnlySpan`1 strSpan, Int32 startIndex, Int32 length, Boolean createHeaderClaimSet)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(ReadOnlyMemory`1 encodedTokenMemory)
+   --- End of inner exception stack trace ---
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(ReadOnlyMemory`1 encodedTokenMemory)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+2026-04-01 15:34:52.904 +02:00 [INF] Bearer was not authenticated. Failure message: IDX14101: Unable to decode the payload '[PII of type 'Microsoft.IdentityModel.Logging.SecurityArtifact' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]' as Base64Url encoded string.
+2026-04-01 15:34:52.910 +02:00 [INF] CORS policy execution successful.
+2026-04-01 15:34:52.932 +02:00 [INF] Executing endpoint 'StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI)'
+2026-04-01 15:34:52.983 +02:00 [INF] Route matched with {action = "Login", controller = "Authentication"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(StudentPlanner.Core.Application.Authentication.LoginRequestDto) on controller StudentPlanner.UI.Controllers.AuthenticationController (StudentPlanner.UI).
+2026-04-01 15:34:53.401 +02:00 [INF] Executing action method StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI) - Validation state: "Valid"
+2026-04-01 15:34:53.410 +02:00 [INF] /authentication/login
+2026-04-01 15:34:54.074 +02:00 [INF] Executed DbCommand (128ms) [Parameters=[@email='jan.kowalski@pw.edu.pl' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FacultyId], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshTokenExpirationDate], [a].[RefreshTokenHash], [a].[RefreshTokenIssuedAt], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName], [a].[UsosToken], [f].[Id], [f].[FacultyCode], [f].[FacultyId], [f].[FacultyName]
+FROM [AspNetUsers] AS [a]
+LEFT JOIN [Faculties] AS [f] ON [a].[FacultyId] = [f].[Id]
+WHERE [a].[Email] = @email
+2026-04-01 15:34:54.518 +02:00 [INF] Executed DbCommand (4ms) [Parameters=[@normalizedUserName='JAN.KOWALSKI@PW.EDU.PL' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FacultyId], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshTokenExpirationDate], [a].[RefreshTokenHash], [a].[RefreshTokenIssuedAt], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName], [a].[UsosToken]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedUserName] = @normalizedUserName
+2026-04-01 15:34:54.785 +02:00 [INF] Executed DbCommand (38ms) [Parameters=[@p21='e637ab17-1ec2-4479-9acc-ef3b6cc20231', @p0='1', @p1='442020dc-f09a-4ae8-8070-e5d7ef74414d' (Size = 4000), @p22='9753d1d6-a0f4-412c-8395-f5817f2ab992' (Size = 4000), @p2='jan.kowalski@pw.edu.pl' (Size = 256), @p3='False', @p4='c5d38e89-d9d5-4dcf-b30e-9d6ca8059e74' (Nullable = true), @p5='Jan' (Nullable = false) (Size = 4000), @p6='Kowalski' (Nullable = false) (Size = 4000), @p7='True', @p8=NULL (DbType = DateTimeOffset), @p9='JAN.KOWALSKI@PW.EDU.PL' (Size = 256), @p10='JAN.KOWALSKI@PW.EDU.PL' (Size = 256), @p11='AQAAAAIAAYagAAAAECWkBraVV2NA1QkcUTroxMKzeRdf0LJ2wadDwSzPs8ZpjYyYg0Ghku+anAyqOACkag==' (Size = 4000), @p12=NULL (Size = 4000), @p13='False', @p14='2026-04-01T14:00:51.2316185', @p15='0ckSnLIetpwYnDwHBzK9sD0DTUKcpFNkt9SykFD29Ic=' (Size = 4000), @p16='2026-04-01T13:00:51.2315977', @p17='BVRPY7OET374UZVWJVJESTLCNK7R4ZCA' (Size = 4000), @p18='False', @p19='jan.kowalski@pw.edu.pl' (Size = 256), @p20=NULL (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [AspNetUsers] SET [AccessFailedCount] = @p0, [ConcurrencyStamp] = @p1, [Email] = @p2, [EmailConfirmed] = @p3, [FacultyId] = @p4, [FirstName] = @p5, [LastName] = @p6, [LockoutEnabled] = @p7, [LockoutEnd] = @p8, [NormalizedEmail] = @p9, [NormalizedUserName] = @p10, [PasswordHash] = @p11, [PhoneNumber] = @p12, [PhoneNumberConfirmed] = @p13, [RefreshTokenExpirationDate] = @p14, [RefreshTokenHash] = @p15, [RefreshTokenIssuedAt] = @p16, [SecurityStamp] = @p17, [TwoFactorEnabled] = @p18, [UserName] = @p19, [UsosToken] = @p20
+OUTPUT 1
+WHERE [Id] = @p21 AND [ConcurrencyStamp] = @p22;
+2026-04-01 15:34:55.550 +02:00 [INF] Executed action method StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI), returned result Microsoft.AspNetCore.Mvc.UnauthorizedObjectResult in 2132.6388ms.
+2026-04-01 15:34:55.583 +02:00 [INF] Executing UnauthorizedObjectResult, writing value of type 'System.String'.
+2026-04-01 15:34:55.604 +02:00 [INF] Executed action StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI) in 2608.936ms
+2026-04-01 15:34:55.608 +02:00 [INF] Executed endpoint 'StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI)'
+2026-04-01 15:34:55.611 +02:00 [INF] HTTP POST /api/auth/login responded 401 in 2701.9395 ms
+2026-04-01 15:34:55.630 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost:5049/api/auth/login - 401 null application/json; charset=utf-8 2808.8073ms
+2026-04-01 15:35:01.397 +02:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5049/api/auth/login - null null
+2026-04-01 15:35:01.437 +02:00 [INF] CORS policy execution successful.
+2026-04-01 15:35:01.444 +02:00 [INF] HTTP OPTIONS /api/auth/login responded 204 in 8.0987 ms
+2026-04-01 15:35:01.472 +02:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5049/api/auth/login - 204 null null 74.4833ms
+2026-04-01 15:35:01.496 +02:00 [INF] Request starting HTTP/1.1 POST http://localhost:5049/api/auth/login - application/json 57
+2026-04-01 15:35:01.518 +02:00 [INF] Failed to validate the token.
+System.ArgumentException: IDX14101: Unable to decode the payload '[PII of type 'Microsoft.IdentityModel.Logging.SecurityArtifact' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]' as Base64Url encoded string.
+ ---> System.Text.Json.JsonException: IDX11020: The JSON value of type: 'String', could not be converted to 'JsonTokenType.String'. Reading: 'Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.iat', Position: '97', CurrentDepth: '1', BytesConsumed: '118'.
+   at Microsoft.IdentityModel.Tokens.Json.JsonSerializerPrimitives.ReadLong(Utf8JsonReader& reader, String propertyName, String className, Boolean read)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadPayloadValue(Utf8JsonReader& reader, IDictionary`2 claims)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.CreatePayloadClaimSet(ReadOnlySpan`1 byteSpan)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.CreateClaimSet(ReadOnlySpan`1 strSpan, Int32 startIndex, Int32 length, Boolean createHeaderClaimSet)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(ReadOnlyMemory`1 encodedTokenMemory)
+   --- End of inner exception stack trace ---
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(ReadOnlyMemory`1 encodedTokenMemory)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+2026-04-01 15:35:01.540 +02:00 [INF] Bearer was not authenticated. Failure message: IDX14101: Unable to decode the payload '[PII of type 'Microsoft.IdentityModel.Logging.SecurityArtifact' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]' as Base64Url encoded string.
+2026-04-01 15:35:01.546 +02:00 [INF] CORS policy execution successful.
+2026-04-01 15:35:01.555 +02:00 [INF] Executing endpoint 'StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI)'
+2026-04-01 15:35:01.566 +02:00 [INF] Route matched with {action = "Login", controller = "Authentication"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(StudentPlanner.Core.Application.Authentication.LoginRequestDto) on controller StudentPlanner.UI.Controllers.AuthenticationController (StudentPlanner.UI).
+2026-04-01 15:35:01.631 +02:00 [INF] Executing action method StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI) - Validation state: "Valid"
+2026-04-01 15:35:01.635 +02:00 [INF] /authentication/login
+2026-04-01 15:35:01.728 +02:00 [INF] Executed DbCommand (14ms) [Parameters=[@email='jan.kowalski@pw.edu.pl' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FacultyId], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshTokenExpirationDate], [a].[RefreshTokenHash], [a].[RefreshTokenIssuedAt], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName], [a].[UsosToken], [f].[Id], [f].[FacultyCode], [f].[FacultyId], [f].[FacultyName]
+FROM [AspNetUsers] AS [a]
+LEFT JOIN [Faculties] AS [f] ON [a].[FacultyId] = [f].[Id]
+WHERE [a].[Email] = @email
+2026-04-01 15:35:01.937 +02:00 [INF] Executed DbCommand (8ms) [Parameters=[@normalizedUserName='JAN.KOWALSKI@PW.EDU.PL' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FacultyId], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshTokenExpirationDate], [a].[RefreshTokenHash], [a].[RefreshTokenIssuedAt], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName], [a].[UsosToken]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedUserName] = @normalizedUserName
+2026-04-01 15:35:01.986 +02:00 [INF] Executed DbCommand (30ms) [Parameters=[@p21='e637ab17-1ec2-4479-9acc-ef3b6cc20231', @p0='0', @p1='6423aa04-c3e1-41fe-9750-2884e34cba77' (Size = 4000), @p22='442020dc-f09a-4ae8-8070-e5d7ef74414d' (Size = 4000), @p2='jan.kowalski@pw.edu.pl' (Size = 256), @p3='False', @p4='c5d38e89-d9d5-4dcf-b30e-9d6ca8059e74' (Nullable = true), @p5='Jan' (Nullable = false) (Size = 4000), @p6='Kowalski' (Nullable = false) (Size = 4000), @p7='True', @p8=NULL (DbType = DateTimeOffset), @p9='JAN.KOWALSKI@PW.EDU.PL' (Size = 256), @p10='JAN.KOWALSKI@PW.EDU.PL' (Size = 256), @p11='AQAAAAIAAYagAAAAECWkBraVV2NA1QkcUTroxMKzeRdf0LJ2wadDwSzPs8ZpjYyYg0Ghku+anAyqOACkag==' (Size = 4000), @p12=NULL (Size = 4000), @p13='False', @p14='2026-04-01T14:00:51.2316185', @p15='0ckSnLIetpwYnDwHBzK9sD0DTUKcpFNkt9SykFD29Ic=' (Size = 4000), @p16='2026-04-01T13:00:51.2315977', @p17='BVRPY7OET374UZVWJVJESTLCNK7R4ZCA' (Size = 4000), @p18='False', @p19='jan.kowalski@pw.edu.pl' (Size = 256), @p20=NULL (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [AspNetUsers] SET [AccessFailedCount] = @p0, [ConcurrencyStamp] = @p1, [Email] = @p2, [EmailConfirmed] = @p3, [FacultyId] = @p4, [FirstName] = @p5, [LastName] = @p6, [LockoutEnabled] = @p7, [LockoutEnd] = @p8, [NormalizedEmail] = @p9, [NormalizedUserName] = @p10, [PasswordHash] = @p11, [PhoneNumber] = @p12, [PhoneNumberConfirmed] = @p13, [RefreshTokenExpirationDate] = @p14, [RefreshTokenHash] = @p15, [RefreshTokenIssuedAt] = @p16, [SecurityStamp] = @p17, [TwoFactorEnabled] = @p18, [UserName] = @p19, [UsosToken] = @p20
+OUTPUT 1
+WHERE [Id] = @p21 AND [ConcurrencyStamp] = @p22;
+2026-04-01 15:35:02.050 +02:00 [INF] Executed DbCommand (4ms) [Parameters=[@user_Id='e637ab17-1ec2-4479-9acc-ef3b6cc20231'], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+FROM [AspNetUserClaims] AS [a]
+WHERE [a].[UserId] = @user_Id
+2026-04-01 15:35:02.106 +02:00 [INF] Executed DbCommand (7ms) [Parameters=[@userId='e637ab17-1ec2-4479-9acc-ef3b6cc20231'], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @userId
+2026-04-01 15:35:02.139 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@normalizedName='STUDENT' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @normalizedName
+2026-04-01 15:35:02.190 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[@role_Id='c80884ea-c352-422a-d2e9-08de8f2bfea2'], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[ClaimType], [a].[ClaimValue]
+FROM [AspNetRoleClaims] AS [a]
+WHERE [a].[RoleId] = @role_Id
+2026-04-01 15:35:02.236 +02:00 [INF] AuthenticationScheme: Identity.Application signed in.
+2026-04-01 15:35:02.281 +02:00 [INF] Executed DbCommand (4ms) [Parameters=[@normalizedEmail='JAN.KOWALSKI@PW.EDU.PL' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FacultyId], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshTokenExpirationDate], [a].[RefreshTokenHash], [a].[RefreshTokenIssuedAt], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName], [a].[UsosToken]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @normalizedEmail
+2026-04-01 15:35:02.297 +02:00 [INF] Executed DbCommand (4ms) [Parameters=[@userId='e637ab17-1ec2-4479-9acc-ef3b6cc20231'], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @userId
+2026-04-01 15:35:02.317 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@normalizedEmail='JAN.KOWALSKI@PW.EDU.PL' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FacultyId], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshTokenExpirationDate], [a].[RefreshTokenHash], [a].[RefreshTokenIssuedAt], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName], [a].[UsosToken]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @normalizedEmail
+2026-04-01 15:35:02.333 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@normalizedUserName='JAN.KOWALSKI@PW.EDU.PL' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[FacultyId], [a].[FirstName], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[RefreshTokenExpirationDate], [a].[RefreshTokenHash], [a].[RefreshTokenIssuedAt], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName], [a].[UsosToken]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedUserName] = @normalizedUserName
+2026-04-01 15:35:02.360 +02:00 [INF] Executed DbCommand (8ms) [Parameters=[@p21='e637ab17-1ec2-4479-9acc-ef3b6cc20231', @p0='0', @p1='8dc4e03e-62c4-4bcc-a9fb-248970a1a355' (Size = 4000), @p22='6423aa04-c3e1-41fe-9750-2884e34cba77' (Size = 4000), @p2='jan.kowalski@pw.edu.pl' (Size = 256), @p3='False', @p4='c5d38e89-d9d5-4dcf-b30e-9d6ca8059e74' (Nullable = true), @p5='Jan' (Nullable = false) (Size = 4000), @p6='Kowalski' (Nullable = false) (Size = 4000), @p7='True', @p8=NULL (DbType = DateTimeOffset), @p9='JAN.KOWALSKI@PW.EDU.PL' (Size = 256), @p10='JAN.KOWALSKI@PW.EDU.PL' (Size = 256), @p11='AQAAAAIAAYagAAAAECWkBraVV2NA1QkcUTroxMKzeRdf0LJ2wadDwSzPs8ZpjYyYg0Ghku+anAyqOACkag==' (Size = 4000), @p12=NULL (Size = 4000), @p13='False', @p14='2026-04-01T14:35:02.3078637Z', @p15='vn+J3R1QANkWExvybRfv3Xkd0+grL6A4h5c3lDsKsIA=' (Size = 4000), @p16='2026-04-01T13:35:02.3063777Z', @p17='BVRPY7OET374UZVWJVJESTLCNK7R4ZCA' (Size = 4000), @p18='False', @p19='jan.kowalski@pw.edu.pl' (Size = 256), @p20=NULL (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [AspNetUsers] SET [AccessFailedCount] = @p0, [ConcurrencyStamp] = @p1, [Email] = @p2, [EmailConfirmed] = @p3, [FacultyId] = @p4, [FirstName] = @p5, [LastName] = @p6, [LockoutEnabled] = @p7, [LockoutEnd] = @p8, [NormalizedEmail] = @p9, [NormalizedUserName] = @p10, [PasswordHash] = @p11, [PhoneNumber] = @p12, [PhoneNumberConfirmed] = @p13, [RefreshTokenExpirationDate] = @p14, [RefreshTokenHash] = @p15, [RefreshTokenIssuedAt] = @p16, [SecurityStamp] = @p17, [TwoFactorEnabled] = @p18, [UserName] = @p19, [UsosToken] = @p20
+OUTPUT 1
+WHERE [Id] = @p21 AND [ConcurrencyStamp] = @p22;
+2026-04-01 15:35:02.448 +02:00 [INF] Executed action method StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 812.2737ms.
+2026-04-01 15:35:02.455 +02:00 [INF] Executing OkObjectResult, writing value of type 'StudentPlanner.Core.Application.Authentication.LoginResponseDto'.
+2026-04-01 15:35:02.463 +02:00 [INF] Executed action StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI) in 888.8228ms
+2026-04-01 15:35:02.468 +02:00 [INF] Executed endpoint 'StudentPlanner.UI.Controllers.AuthenticationController.Login (StudentPlanner.UI)'
+2026-04-01 15:35:02.472 +02:00 [INF] HTTP POST /api/auth/login responded 200 in 925.6344 ms
+2026-04-01 15:35:02.477 +02:00 [INF] Request finished HTTP/1.1 POST http://localhost:5049/api/auth/login - 200 null application/json; charset=utf-8 982.1782ms
