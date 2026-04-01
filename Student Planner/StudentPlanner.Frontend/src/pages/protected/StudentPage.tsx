@@ -2,10 +2,20 @@ import { Outlet, useNavigate } from "react-router-dom"
 import Navbar from "../../components/layout/Navbar"
 import Calendar from "../../components/calendar/Calendar";
 import { queryClient } from "../../api/queryClient";
+import type { loginResponse } from "../../types/authTypes";
+import {useGetAllPersonalEvents} from "../../hooks/personalEventHooks"
 
 export default function StudentPage(){
     const navigate = useNavigate();
-    const user = queryClient.getQueryData(['user']);
+    const user: loginResponse | undefined = queryClient.getQueryData(['user']);
+    const {events} = useGetAllPersonalEvents();
+
+    if(user===undefined)
+    {
+        navigate("/");
+        return null;
+    }
+
     return <>
         <Navbar>
                 <div>
@@ -19,7 +29,7 @@ export default function StudentPage(){
                 </div>
         </Navbar>
         <main className="main-content">
-            <Calendar/>
+            <Calendar events={events}/>
         </main>
         <Outlet/>
     </>
