@@ -25,6 +25,9 @@ public static class ServiceConfigExtention
         //mail
         services.AddTransient<ISmtpClient, SmtpClient>();
 
+        //config
+        services.Configure<UsosApiSettings>(config.GetSection("UsosApi"));
+
         //services
         services.AddScoped<IPersonalEventService, PersonalEventService>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -34,8 +37,20 @@ public static class ServiceConfigExtention
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, MailtrapEmailService>();
 
+        var baseUrl = config["UsosApi:BaseUrl"];
+
+        Console.WriteLine($"DEBUG BaseUrl = {baseUrl}");
+
+        services.AddHttpClient<IUsosClient, UsosClient>(client =>
+        {
+            client.BaseAddress = new Uri(config["UsosApi:BaseUrl"]!);
+        });
         //repo
         services.AddScoped<IPersonalEventRepository, PersonalEventRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IFacultyRepository, FacultyRepository>();
+
+        //hosted
+        services.AddHostedService<FacultyBootstrapService>();
     }
 }

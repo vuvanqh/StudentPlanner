@@ -1,12 +1,9 @@
-using Azure.Core;
 using Microsoft.AspNetCore.Identity;
 using StudentPlanner.Core.Application.Authentication;
 using StudentPlanner.Core.Entities;
-using StudentPlanner.Infrastructure;
 using StudentPlanner.Infrastructure.IdentityEntities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
+using StudentPlanner.Core.Domain.Entities;
 
 namespace StudentPlanner.Infrastructure.Identity;
 
@@ -15,33 +12,41 @@ public class IdentityService : IIdentityService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly ApplicationDbContext _context;
 
-    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager)
+    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager,
+        ApplicationDbContext context)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
+        _context = context;
     }
     public async Task<User> SignInAsync(string email, string password)
     {
-        ApplicationUser user = (await _userManager.FindByEmailAsync(email)) ?? throw new UnauthorizedAccessException("Invalid Credentials"); //i suppose we do not want to disclose whether an account associated with this email exists
+        ApplicationUser user = (await _userManager.Users
+            .Include(u => u.Faculty)
+            .FirstOrDefaultAsync(u => u.Email == email)) ?? throw new UnauthorizedAccessException("Invalid Credentials"); //i suppose we do not want to disclose whether an account associated with this email exists
 
         var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: true);
+
         if (!result.Succeeded)
             throw new UnauthorizedAccessException("Invalid Credentials");
 
         return user.ToUser();
     }
 
-    public async Task RegisterUser(User user, string password, string? role = null)
+    public async Task RegisterUser(User user, string password, Guid? facultyId, string? role = null)
     {
+
         ApplicationUser appUser = new ApplicationUser()
         {
             Id = user.Id,
             UserName = user.Email,
             Email = user.Email,
             FirstName = user.FirstName,
-            LastName = user.LastName
+            LastName = user.LastName,
+            FacultyId = facultyId
         };
 
         var result = await _userManager.CreateAsync(appUser, password);
