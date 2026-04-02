@@ -200,7 +200,8 @@ public class RefreshTokenServiceTests
             FirstName = "John",
             LastName = "Doe",
             RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(7),
-            RefreshTokenIssuedAt = DateTime.UtcNow
+            RefreshTokenIssuedAt = DateTime.UtcNow,
+            Role = "Student"
         };
     }
 }

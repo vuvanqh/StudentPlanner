@@ -72,6 +72,8 @@ public class IdentityServiceTests : IDisposable
     [Fact]
     public async Task SignInAsync_ShouldReturnUser_WhenCredentialsAreValid()
     {
+        _userManagerMock.Setup(m => m.GetRolesAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync(new List<string> { "Student" });
         var appUser = new ApplicationUser { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", UserName = "test@pw.edu.pl", FirstName = "John", LastName = "Doe" };
         _context.Users.Add(appUser);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);

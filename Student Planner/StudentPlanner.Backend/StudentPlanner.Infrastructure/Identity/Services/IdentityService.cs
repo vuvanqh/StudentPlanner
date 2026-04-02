@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using StudentPlanner.Core.Application.Authentication;
+using StudentPlanner.Core.Domain.Entities;
 using StudentPlanner.Core.Entities;
 using StudentPlanner.Infrastructure.IdentityEntities;
-using Microsoft.EntityFrameworkCore;
-using StudentPlanner.Core.Domain.Entities;
+using System.Data;
 
 namespace StudentPlanner.Infrastructure.Identity;
 
@@ -30,9 +31,11 @@ public class IdentityService : IIdentityService
         if (!result.Succeeded)
             throw new UnauthorizedAccessException("Invalid Credentials");
 
-        var role = await _userManager.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
 
-        return user.ToUser(role[0]);
+        var roleName = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
+
+        return user.ToUser(roleName);
     }
 
     public async Task RegisterUser(User user, string password, Guid? facultyId, string? role = null)
