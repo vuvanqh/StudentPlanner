@@ -2,7 +2,7 @@ import { useActionState } from 'react'
 import { useNavigate, useLocation, NavLink } from 'react-router-dom'
 import Modal from '../../components/modals/Modal'
 import Input from '../../components/common/Input';
-import { useAuth } from '../../hooks/authHooks';
+import { useAuth } from '../../global-hooks/authHooks';
 
 type stateType = {
   email: string,
@@ -85,7 +85,7 @@ export default function LoginPage() {
     <Modal open={isLoginOpen} className="register-page" onClose={()=>navigate("/")}>    
         <p>Welcome back to Student Planner</p>
 
-        <form action={formAction}>
+        <form action={formAction} className='auth-form'>
             <Input type="email" id="email" label="University Email" defaultValue={state.email}
                 pattern="^[^@]+@pw\.edu\.pl$" onChange={emailValidator}/>
 

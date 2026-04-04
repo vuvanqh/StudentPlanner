@@ -72,6 +72,8 @@ public class IdentityServiceTests : IDisposable
     [Fact]
     public async Task SignInAsync_ShouldReturnUser_WhenCredentialsAreValid()
     {
+        _userManagerMock.Setup(m => m.GetRolesAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync(new List<string> { "Student" });
         var appUser = new ApplicationUser { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", UserName = "test@pw.edu.pl", FirstName = "John", LastName = "Doe" };
         _context.Users.Add(appUser);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -90,7 +92,7 @@ public class IdentityServiceTests : IDisposable
     [Fact]
     public async Task RegisterUser_ShouldThrowException_WhenUserManagerFails()
     {
-        var user = new User { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", FirstName = "John", LastName = "Doe", Role = "Student" };
         var facultyId = Guid.NewGuid();
         var failedResult = IdentityResult.Failed(
             new IdentityError { Description = "Password too weak!" },
@@ -108,7 +110,7 @@ public class IdentityServiceTests : IDisposable
     [Fact]
     public async Task RegisterUser_ShouldSucceed_WhenUserManagerSucceeds()
     {
-        var user = new User { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", FirstName = "John", LastName = "Doe", Role = "Student" };
         var facultyId = Guid.NewGuid();
         _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>(), "password")).ReturnsAsync(IdentityResult.Success);
 
@@ -205,7 +207,7 @@ public class IdentityServiceTests : IDisposable
     [Fact]
     public async Task GetUserRolesAsync_ShouldReturnRoles_WhenUserExists()
     {
-        var user = new User { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = "test@pw.edu.pl", FirstName = "John", LastName = "Doe", Role = "Student" };
         var appUser = new ApplicationUser { Email = "test@pw.edu.pl", UserName = "test@pw.edu.pl", FirstName = "John", LastName = "Doe" };
         var roles = new List<string> { "Student" };
 

@@ -4,30 +4,68 @@ import interactionPlugin from "@fullcalendar/interaction"  // needed for dayClic
 import type { EventContentArg } from '@fullcalendar/core'
 import type { DateClickArg } from '@fullcalendar/interaction'
 import type { EventClickArg } from '@fullcalendar/core'
+import type { personalEventResponse } from '../../types/personalEventTypes'
+import timeGridPlugin from "@fullcalendar/timegrid";
+import { useRef, useContext } from "react";
+import { ModalContext } from '../../store/ModalContext'
+import { isSameDay, toLocalInput } from '../../api/helpers'
+
+export default function Calendar({events}:{events: personalEventResponse[]}) {
+  const {open} = useContext(ModalContext);
+  const handleEventClick = (arg: EventClickArg) => {
+    open({type: "view", eventId: arg.event.id});
+  }
+  const handleDateClick = (arg: DateClickArg) => {
+    if (arg.view.type !== "timeGridWeek")
+    {
+      const filtered = events.filter(e => isSameDay(e.startTime, arg.date));
+      open({type: "eventList", events: filtered})
+      return;
+    }
+
+    const start = new Date(arg.date);
+    open({type: "createPersonal", startTime: toLocalInput(start)});
+  }
 
 
-const handleEventClick = (arg: EventClickArg) => {
-  alert(`Event: ${arg.event.title}`)
-}
+  const mappedEvents = events.map(e => ({
+    id: e.id,
+    title: e.title,
+    start: new Date(e.startTime),
+    end: new Date(e.endTime),
+    extendedProps: {
+      description: e.description,
+      location: e.location
+    }
+  }));
 
-const handleDateClick = (arg: DateClickArg) => {
-    alert(arg.dateStr)
-}
+  const calendarRef = useRef<any>(null);
 
-export default function Calendar() {
   return <div className="calendar-wrapper">
     <FullCalendar
-    plugins={[ dayGridPlugin, interactionPlugin ]}
-    initialView="dayGridMonth"
-    weekends={true}
-    firstDay={1}
-    eventContent={renderEventContent}   
-    events={[
-        { title: 'event 1', date: '2026-03-28' },
-        { title: 'event 2', date: '2019-04-02' }
-    ]}
-    eventClick={handleEventClick}
-    dateClick={handleDateClick}
+     ref={calendarRef}
+     headerToolbar={{
+        left: "title",
+        center: "",
+        right: "dayGridMonth,timeGridWeek,today prev,next"
+      }}
+      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+      initialView="dayGridMonth"
+      weekends={true}
+      firstDay={1}
+      eventContent={renderEventContent}   
+      events={[
+          { title: 'event 1', start: '2026-03-28' },
+          { title: 'event 2', start: '2019-04-02' },
+          ...mappedEvents
+      ]}
+      eventClick={handleEventClick}
+      dateClick={handleDateClick}
+      eventTimeFormat={{
+        hour: 'numeric',
+        minute: '2-digit',
+        meridiem: 'short'
+      }}
     />
   </div>
 }
@@ -36,9 +74,9 @@ export default function Calendar() {
 
 function renderEventContent(eventInfo: EventContentArg) {
   return(
-    <>
-      <b>{eventInfo.timeText}</b>
-      <i>{eventInfo.event.title}</i>
-    </>
-  )
+    <div className="event-content">
+      <div className="event-time">{eventInfo.timeText}</div>
+      <div className="event-title">{eventInfo.event.title}</div>
+    </div>
+  );
 }

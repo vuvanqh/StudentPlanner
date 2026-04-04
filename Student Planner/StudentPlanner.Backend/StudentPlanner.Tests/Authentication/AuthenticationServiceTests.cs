@@ -55,7 +55,7 @@ public class AuthenticationServiceTests
             Password = "Password123!"
         };
 
-        var existingUser = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "Existing", LastName = "User" };
+        var existingUser = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "Existing", LastName = "User", Role = "Student" };
 
         _userRepoMock.Setup(repo => repo.GetUserByEmailAsync(request.Email)).ReturnsAsync(existingUser);
 
@@ -136,7 +136,7 @@ public class AuthenticationServiceTests
     {
 
         var request = new LoginRequestDto { Email = "user@pw.edu.pl", Password = "Password123!" };
-        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe", Role = "Student" };
         var refreshTokenResult = new RefreshTokenResult { RefreshToken = "ref-token", ExpirationDate = DateTime.UtcNow.AddDays(7) };
 
         _identityServiceMock.Setup(s => s.SignInAsync(request.Email, request.Password)).ReturnsAsync(user);
@@ -159,7 +159,7 @@ public class AuthenticationServiceTests
     {
 
         var request = new LoginRequestDto { Email = "user@pw.edu.pl", Password = "Password123!" };
-        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe", Role = "Student" };
         var refreshTokenResult = new RefreshTokenResult { RefreshToken = "ref-token", ExpirationDate = DateTime.UtcNow.AddDays(7) };
 
         _identityServiceMock.Setup(s => s.SignInAsync(request.Email, request.Password)).ReturnsAsync(user);
@@ -197,7 +197,7 @@ public class AuthenticationServiceTests
     {
 
         var request = new ForgotPasswordRequestDto { Email = "user@pw.edu.pl" };
-        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe", Role = "Student" };
 
         _userRepoMock.Setup(repo => repo.GetUserByEmailAsync(request.Email)).ReturnsAsync(user);
         _identityServiceMock.Setup(i => i.GeneratePasswordResetTokenAsync(user.Email)).ReturnsAsync("mocked-token");
@@ -235,7 +235,7 @@ public class AuthenticationServiceTests
             NewPassword = "NewPassword123!",
             ConfirmNewPassword = "NewPassword123!"
         };
-        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = request.Email, FirstName = "John", LastName = "Doe", Role = "Student" };
 
         _userRepoMock.Setup(repo => repo.GetUserByEmailAsync(request.Email)).ReturnsAsync(user);
         _identityServiceMock.Setup(i => i.ResetPasswordAsync(request.Email, request.Token, request.NewPassword)).Returns(Task.CompletedTask);
@@ -269,7 +269,7 @@ public class AuthenticationServiceTests
     {
 
         var oldToken = "old-ref-token";
-        var user = new User { Id = Guid.NewGuid(), Email = "user@pw.edu.pl", FirstName = "John", LastName = "Doe" };
+        var user = new User { Id = Guid.NewGuid(), Email = "user@pw.edu.pl", FirstName = "John", LastName = "Doe", Role = "Student" };
         var newRefreshResult = new RefreshTokenResult { RefreshToken = "new-ref-token", ExpirationDate = DateTime.UtcNow.AddDays(7) };
 
         _refreshTokenServiceMock.Setup(r => r.RotateTokenAsync(oldToken)).ReturnsAsync((user, newRefreshResult));

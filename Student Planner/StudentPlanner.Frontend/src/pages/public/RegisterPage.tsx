@@ -2,7 +2,7 @@ import { useActionState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Modal from '../../components/modals/Modal'
 import Input from '../../components/common/Input';
-import { useAuth } from '../../hooks/authHooks';
+import { useAuth } from '../../global-hooks/authHooks';
 
 type stateType = {
   email: string,
@@ -33,14 +33,6 @@ export default function RegisterPage() {
           email: formData.get('email') as string,
           password: formData.get('password') as string,
           confirmPassword: formData.get('confirmPassword') as string
-      }
-
-      if(data.password!=data.confirmPassword){
-          return {
-            ...data,
-            success: false,
-            errors: ["Passwords don't match"]
-          }
       }
 
       try{
@@ -82,14 +74,12 @@ export default function RegisterPage() {
     <Modal open={isRegisterOpen} className="register-page" onClose={()=>navigate("/")}>    
         <p>Join Student Planner today</p>
 
-        <form key={state.email + state.password} action={formAction}>
+        <form action={formAction} className="auth-form">
             <Input type="email" id="email" label="University Email" defaultValue={state.email}
                 pattern="^[^@]+@pw\.edu\.pl$" onChange={emailValidator}/>
 
-            <div className='form-row'>
-              <Input type="password" id="password" label="Password" defaultValue={state.password}/>
-              <Input type="password" id="confirmPassword" label="Confirm Password" defaultValue={state.password}/>
-            </div>
+            <Input type="password" id="password" label="Password" defaultValue={state.password}/>
+            
 
             {state.errors?.map(error => <small className="error-text" key={error}>{error}</small>)}
           <button type="submit" disabled={isRegisterPending}>Create Account</button> 
