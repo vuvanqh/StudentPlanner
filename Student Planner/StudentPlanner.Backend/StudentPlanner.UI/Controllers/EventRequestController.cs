@@ -78,7 +78,7 @@ public class EventRequestController : ControllerBase
     }
 
     // Manager endpoints
-    [HttpDelete("delete/{requestId:guid}")]   
+    [HttpDelete("delete/{requestId:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -93,7 +93,7 @@ public class EventRequestController : ControllerBase
         await _eventRequestService.DeleteAsync(Guid.Parse(userId), requestId);
         return Ok(new { Message = "Success" });
     }
-
+    
     // Admin endpoints
     [HttpPatch("approve/{requestId:guid}")]
     [Authorize]
