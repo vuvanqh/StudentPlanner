@@ -12,6 +12,5 @@ public class EventRequest
     public required RequestType RequestType { get; set; }
     public required RequestStatus Status { get; set; }
     public string? ReviewComment { get; set; }
-    //public required AcademicEvent Event { get; set; }
 }
 
