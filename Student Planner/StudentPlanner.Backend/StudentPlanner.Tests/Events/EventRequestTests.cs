@@ -324,7 +324,7 @@ public class EventRequestTests
     {
         Guid managerId = Guid.NewGuid();
 
-         List<EventRequest> requests = new()
+        List<EventRequest> requests = new()
         {
             new EventRequest
             {
