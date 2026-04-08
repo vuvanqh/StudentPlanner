@@ -23,7 +23,6 @@ public class EventRequestService : IEventRequestService
         {
             throw new ArgumentException("Update and Delete requests must contain EventId.");
         }
-        
         EventRequest eventRequest = new EventRequest
         {
             Id = Guid.NewGuid(),
