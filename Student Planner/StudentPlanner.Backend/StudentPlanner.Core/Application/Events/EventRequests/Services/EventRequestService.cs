@@ -11,7 +11,7 @@ public class EventRequestService : IEventRequestService
     private readonly IReadOnlyDictionary<RequestType, IEventRequestApprovalStrategy> _strategies;
 
     public EventRequestService(
-        IEventRequestRepository eventRequestRepository, 
+        IEventRequestRepository eventRequestRepository,
         CreateApprovalStrategy createStrategy,
         UpdateApprovalStrategy updateStrategy,
         DeleteApprovalStrategy deleteStrategy)

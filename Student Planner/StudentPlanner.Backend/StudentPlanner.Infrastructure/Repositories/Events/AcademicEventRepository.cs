@@ -7,7 +7,7 @@ namespace StudentPlanner.Infrastructure.Repositories;
 public class AcademicEventRepository : IAcademicEventRepository
 {
     private readonly ApplicationDbContext _context;
-    
+
     public AcademicEventRepository(ApplicationDbContext context) => _context = context;
 
     public async Task AddAsync(AcademicEvent academicEvent)
