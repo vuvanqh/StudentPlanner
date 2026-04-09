@@ -32,7 +32,6 @@ public class AcademicEventRepository : IAcademicEventRepository
 
     public async Task UpdateAsync(AcademicEvent academicEvent)
     {
-        _context.AcademicEvents.Update(academicEvent);
         await _context.SaveChangesAsync();
     }
 }

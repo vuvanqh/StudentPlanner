@@ -18,7 +18,6 @@ public class AcademicEventConfig : IEntityTypeConfiguration<AcademicEvent>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.OwnsOne(e => e.EventDetails);
-        builder.PrimitiveCollection(e => e.SubscriberIds);
 
         builder.HasIndex(e => e.FacultyId);
     }

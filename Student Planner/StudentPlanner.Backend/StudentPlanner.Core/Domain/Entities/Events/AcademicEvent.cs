@@ -6,5 +6,5 @@ namespace StudentPlanner.Core.Domain;
 public class AcademicEvent : Event
 {
     public required Guid FacultyId { get; set; }
-    public ICollection<Guid> SubscriberIds { get; set; } = new List<Guid>();
+    public ICollection<AcademicEventSubscriber> Subscribers { get; set; } = new List<AcademicEventSubscriber>();
 }
