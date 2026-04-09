@@ -30,6 +30,16 @@ public class AcademicEventRepository : IAcademicEventRepository
         return await _context.AcademicEvents.FirstOrDefaultAsync(e => e.Id == eventId);
     }
 
+    public async Task<IEnumerable<AcademicEvent>> GetAllAsync()
+    {
+        return await _context.AcademicEvents.ToListAsync();
+    }
+
+    public async Task<IEnumerable<AcademicEvent>> GetByFacultyIdAsync(Guid facultyId)
+    {
+        return await _context.AcademicEvents.Where(e => e.FacultyId == facultyId).ToListAsync();
+    }
+
     public async Task UpdateAsync(AcademicEvent academicEvent)
     {
         await _context.SaveChangesAsync();
