@@ -36,8 +36,15 @@ public class AcademicEventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAllEvents()
     {
-        var result = await _academicEventService.GetAllEventsAsync();
-        return Ok(result);
+        try
+        {
+            var result = await _academicEventService.GetAllEventsAsync();
+            return Ok(result);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while retrieving events." });
+        }
     }
 
     /// <summary>
@@ -50,12 +57,23 @@ public class AcademicEventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetFacultyEvents()
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access" });
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access" });
 
-        var result = await _academicEventService.GetEventsForUserAsync(Guid.Parse(userId));
-        return Ok(result);
+            var result = await _academicEventService.GetEventsForUserAsync(Guid.Parse(userId));
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while retrieving faculty events." });
+        }
     }
 
     /// <summary>
@@ -70,10 +88,25 @@ public class AcademicEventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetEventDetails(Guid id)
     {
-        var result = await _academicEventService.GetEventByIdAsync(id);
-        if (result == null)
-            return NotFound(new { Message = "Event not found." });
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access" });
 
-        return Ok(result);
+            var result = await _academicEventService.GetEventByIdAsync(id, Guid.Parse(userId));
+            if (result == null)
+                return NotFound(new { Message = "Event not found." });
+
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while retrieving event details." });
+        }
     }
 }

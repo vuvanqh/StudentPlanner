@@ -9,5 +9,5 @@ public interface IAcademicEventService
 {
     Task<IEnumerable<AcademicEventResponse>> GetAllEventsAsync();
     Task<IEnumerable<AcademicEventResponse>> GetEventsForUserAsync(Guid userId);
-    Task<AcademicEventResponse?> GetEventByIdAsync(Guid id);
+    Task<AcademicEventResponse?> GetEventByIdAsync(Guid id, Guid userId);
 }

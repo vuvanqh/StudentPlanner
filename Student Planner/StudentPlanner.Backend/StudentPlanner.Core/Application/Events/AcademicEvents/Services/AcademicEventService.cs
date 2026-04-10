@@ -26,10 +26,20 @@ public class AcademicEventService : IAcademicEventService
         return events.Select(e => e.ToAcademicEventResponse());
     }
 
-    public async Task<AcademicEventResponse?> GetEventByIdAsync(Guid id)
+    public async Task<AcademicEventResponse?> GetEventByIdAsync(Guid id, Guid userId)
     {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+            throw new KeyNotFoundException("User not found.");
+
         var e = await _academicEventRepository.GetByIdAsync(id);
         if (e == null) return null;
+
+        if ((user.Role != UserRoleOptions.Admin.ToString()) && (user.Faculty == null || e.FacultyId != user.Faculty.Id))
+        {
+            // prevent showing events from other faculties
+            return null;
+        }
 
         return e.ToAcademicEventResponse();
     }
