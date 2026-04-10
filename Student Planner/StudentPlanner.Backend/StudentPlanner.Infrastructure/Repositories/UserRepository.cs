@@ -60,4 +60,11 @@ public class UserRepository : IUserRepository
         var resp = await _userManager.GetRolesAsync(user);
         return user.ToUser(resp[0]);
     }
+    public async Task<User?> GetUserByIdAsync(Guid userId)
+    {
+         var user = await _context.Users
+        .Include(u => u.Faculty)
+        .FirstOrDefaultAsync(u => u.Id == userId);
+        return await GetUserWithRole(user);
+    }
 }
