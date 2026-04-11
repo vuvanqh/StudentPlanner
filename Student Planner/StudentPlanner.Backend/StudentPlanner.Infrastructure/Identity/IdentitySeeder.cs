@@ -18,7 +18,7 @@ public static class IdentitySeeder
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
         if (!await roleManager.RoleExistsAsync("Manager"))
-            await roleManager.CreateAsync(new ApplicationRole { Name=UserRoleOptions.Manager.ToString()});
+            await roleManager.CreateAsync(new ApplicationRole { Name = UserRoleOptions.Manager.ToString() });
 
         var user = await userManager.FindByEmailAsync("manager@pw.edu.pl");
 
