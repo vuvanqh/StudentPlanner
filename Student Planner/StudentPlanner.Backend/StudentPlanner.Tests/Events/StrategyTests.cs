@@ -136,7 +136,7 @@ public class StrategyTests
     }
 
     [Fact]
-    public async Task CreateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenDetailsAreInvalid()
+    public async Task CreateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenTitleIsEmpty()
     {
         var strategy = new CreateApprovalStrategy(_academicEventRepo);
         var eventRequest = new EventRequest
@@ -175,7 +175,7 @@ public class StrategyTests
                 Title = "Title",
                 Location = "Location",
                 StartTime = DateTime.UtcNow.AddHours(2),
-                EndTime = DateTime.UtcNow.AddHours(1) // Invalid: end before start
+                EndTime = DateTime.UtcNow.AddHours(1) // end before start
             }
         };
 
@@ -183,7 +183,7 @@ public class StrategyTests
     }
 
     [Fact]
-    public async Task UpdateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenDetailsAreInvalid()
+    public async Task UpdateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenTitleIsEmpty()
     {
         var strategy = new UpdateApprovalStrategy(_academicEventRepo);
         var eventId = Guid.NewGuid();
@@ -198,7 +198,7 @@ public class StrategyTests
             EventId = eventId,
             EventDetails = new EventDetails
             {
-                Title = "", // Invalid
+                Title = "", 
                 StartTime = DateTime.UtcNow,
                 EndTime = DateTime.UtcNow.AddHours(1)
             }
@@ -236,5 +236,115 @@ public class StrategyTests
             .ReturnsAsync((AcademicEvent?)null);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => strategy.ExecuteAsync(eventRequest));
+    }
+
+    [Fact]
+    public async Task UpdateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenEventIdMissing()
+    {
+        var strategy = new UpdateApprovalStrategy(_academicEventRepo);
+        var eventRequest = new EventRequest
+        {
+            Id = Guid.NewGuid(),
+            FacultyId = Guid.NewGuid(),
+            ManagerId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            RequestType = RequestType.Update,
+            Status = RequestStatus.Pending,
+            EventId = null, // missing EventId
+            EventDetails = new EventDetails { Title = "Title", Location = "Loc", StartTime = DateTime.UtcNow, EndTime = DateTime.UtcNow.AddHours(1) }
+        };
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => strategy.ExecuteAsync(eventRequest));
+    }
+
+    [Fact]
+    public async Task DeleteApprovalStrategy_ExecuteAsync_ShouldThrow_WhenEventIdMissing()
+    {
+        var strategy = new DeleteApprovalStrategy(_academicEventRepo);
+        var eventRequest = new EventRequest
+        {
+            Id = Guid.NewGuid(),
+            FacultyId = Guid.NewGuid(),
+            ManagerId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            Status = RequestStatus.Pending,
+            RequestType = RequestType.Delete,
+            EventId = null, // Missing EventId
+            EventDetails = new EventDetails { Title = "Title" }
+        };
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => strategy.ExecuteAsync(eventRequest));
+    }
+
+    [Fact]
+    public async Task CreateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenLocationIsMissing()
+    {
+        var strategy = new CreateApprovalStrategy(_academicEventRepo);
+        var eventRequest = new EventRequest
+        {
+            Id = Guid.NewGuid(),
+            FacultyId = Guid.NewGuid(),
+            ManagerId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            RequestType = RequestType.Create,
+            Status = RequestStatus.Pending,
+            EventDetails = new EventDetails
+            {
+                Title = "Title",
+                Location = "", 
+                StartTime = DateTime.UtcNow,
+                EndTime = DateTime.UtcNow.AddHours(1)
+            }
+        };
+
+        await Assert.ThrowsAsync<ArgumentException>(() => strategy.ExecuteAsync(eventRequest));
+    }
+
+    [Fact]
+    public async Task CreateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenStartTimeIsMissing()
+    {
+        var strategy = new CreateApprovalStrategy(_academicEventRepo);
+        var eventRequest = new EventRequest
+        {
+            Id = Guid.NewGuid(),
+            FacultyId = Guid.NewGuid(),
+            ManagerId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            RequestType = RequestType.Create,
+            Status = RequestStatus.Pending,
+            EventDetails = new EventDetails
+            {
+                Title = "Title",
+                Location = "Staff",
+                StartTime = default, 
+                EndTime = DateTime.UtcNow.AddHours(1)
+            }
+        };
+
+        await Assert.ThrowsAsync<ArgumentException>(() => strategy.ExecuteAsync(eventRequest));
+    }
+
+    [Fact]
+    public async Task CreateApprovalStrategy_ExecuteAsync_ShouldThrow_WhenEndTimeIsMissing()
+    {
+        var strategy = new CreateApprovalStrategy(_academicEventRepo);
+        var eventRequest = new EventRequest
+        {
+            Id = Guid.NewGuid(),
+            FacultyId = Guid.NewGuid(),
+            ManagerId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            RequestType = RequestType.Create,
+            Status = RequestStatus.Pending,
+            EventDetails = new EventDetails
+            {
+                Title = "Title",
+                Location = "Staff",
+                StartTime = DateTime.UtcNow,
+                EndTime = default 
+            }
+        };
+
+        await Assert.ThrowsAsync<ArgumentException>(() => strategy.ExecuteAsync(eventRequest));
     }
 }

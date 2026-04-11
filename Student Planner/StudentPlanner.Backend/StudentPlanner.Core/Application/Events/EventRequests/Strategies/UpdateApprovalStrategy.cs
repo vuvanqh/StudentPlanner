@@ -22,6 +22,7 @@ public class UpdateApprovalStrategy : IEventRequestApprovalStrategy
 
         EventRequestValidationHelper.ValidateEventDetails(eventRequest.EventDetails);
         existingUpdateEvent.EventDetails = eventRequest.EventDetails;
+        existingUpdateEvent.FacultyId = eventRequest.FacultyId;
         await _academicEventRepository.UpdateAsync(existingUpdateEvent);
     }
 }
