@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -35,12 +36,19 @@ public class EventRequestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetMyRequests()
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access" });
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access" });
 
-        var response = await _eventRequestService.GetByManagerIdAsync(Guid.Parse(userId));
-        return Ok(response);
+            var response = await _eventRequestService.GetByManagerIdAsync(Guid.Parse(userId));
+            return Ok(response);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while retrieving your requests." });
+        }
     }
 
     /// <summary>
@@ -53,12 +61,19 @@ public class EventRequestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAllRequests()
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access" });
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access" });
 
-        var response = await _eventRequestService.GetAllAsync();
-        return Ok(response);
+            var response = await _eventRequestService.GetAllAsync();
+            return Ok(response);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while retrieving all requests." });
+        }
     }
 
     /// <summary>
@@ -73,12 +88,27 @@ public class EventRequestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetRequestById(Guid requestId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access" });
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access" });
 
-        var response = await _eventRequestService.GetByIdAsync(Guid.Parse(userId), requestId);
-        return Ok(response);
+            var response = await _eventRequestService.GetByIdAsync(Guid.Parse(userId), requestId);
+            return Ok(response);
+        }
+        catch (ArgumentException ex) when (ex.Message.Contains("exist", StringComparison.OrdinalIgnoreCase))
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while retrieving the request details." });
+        }
     }
 
     /// <summary>
@@ -93,13 +123,24 @@ public class EventRequestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateRequest(CreateEventRequestRequest request)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access." });
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access." });
 
-        Guid requestId = await _eventRequestService.CreateAsync(Guid.Parse(userId), request);
-        return Ok(new { EventRequestId = requestId, Message = "Success" });
+            Guid requestId = await _eventRequestService.CreateAsync(Guid.Parse(userId), request);
+            return Ok(new { EventRequestId = requestId, Message = "Success" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while creating the event request." });
+        }
     }
 
     /// <summary>
@@ -114,13 +155,36 @@ public class EventRequestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteRequest(Guid requestId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access." });
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access." });
 
-        await _eventRequestService.DeleteAsync(Guid.Parse(userId), requestId);
-        return Ok(new { Message = "Success" });
+            await _eventRequestService.DeleteAsync(Guid.Parse(userId), requestId);
+            return Ok(new { Message = "Success" });
+        }
+        catch (ArgumentException ex) when (ex.Message.Contains("exist", StringComparison.OrdinalIgnoreCase))
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { Message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while deleting the event request." });
+        }
     }
 
     /// <summary>
@@ -135,12 +199,27 @@ public class EventRequestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ApproveRequest(Guid requestId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access" });
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access" });
 
-        await _eventRequestService.ApproveAsync(Guid.Parse(userId), requestId);
-        return Ok(new { Message = "Success" });
+            await _eventRequestService.ApproveAsync(Guid.Parse(userId), requestId);
+            return Ok(new { Message = "Success" });
+        }
+        catch (ArgumentException ex) when (ex.Message.Contains("exist", StringComparison.OrdinalIgnoreCase))
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while approving the event request." });
+        }
     }
 
     /// <summary>
@@ -155,11 +234,26 @@ public class EventRequestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RejectRequest(Guid requestId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-            return Unauthorized(new { Message = "Unauthorized access" });
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized(new { Message = "Unauthorized access" });
 
-        await _eventRequestService.RejectAsync(Guid.Parse(userId), requestId);
-        return Ok(new { Message = "Success" });
+            await _eventRequestService.RejectAsync(Guid.Parse(userId), requestId);
+            return Ok(new { Message = "Success" });
+        }
+        catch (ArgumentException ex) when (ex.Message.Contains("exist", StringComparison.OrdinalIgnoreCase))
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while rejecting the event request." });
+        }
     }
 }
