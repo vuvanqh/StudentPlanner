@@ -34,7 +34,6 @@ public class IdentityService : IIdentityService
         var roles = await _userManager.GetRolesAsync(user);
 
         var roleName = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
-        Console.WriteLine($"Faculty: {user.ToUser(roleName).Faculty.Id.ToString()}");
         return user.ToUser(roleName);
     }
 

@@ -17,14 +17,14 @@ public static class IdentitySeeder
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-        if (!await roleManager.RoleExistsAsync("Manager"))
+        if (!await roleManager.RoleExistsAsync(UserRoleOptions.Manager.ToString()))
             await roleManager.CreateAsync(new ApplicationRole { Name = UserRoleOptions.Manager.ToString() });
 
-        var user = await userManager.FindByEmailAsync("manager@pw.edu.pl");
+        var manager = await userManager.FindByEmailAsync("manager@pw.edu.pl");
 
-        if (user == null)
+        if (manager == null)
         {
-            user = new ApplicationUser
+            manager = new ApplicationUser
             {
                 FirstName = "Manager",
                 LastName = "Hehe",
@@ -34,8 +34,28 @@ public static class IdentitySeeder
                 EmailConfirmed = true
             };
 
-            await userManager.CreateAsync(user, "Password123!");
-            await userManager.AddToRoleAsync(user, "Manager");
+            await userManager.CreateAsync(manager, "Password123!");
+            await userManager.AddToRoleAsync(manager, UserRoleOptions.Manager.ToString());
+        }
+
+        if (!await roleManager.RoleExistsAsync(UserRoleOptions.Admin.ToString()))
+            await roleManager.CreateAsync(new ApplicationRole { Name = UserRoleOptions.Admin.ToString() });
+
+        var admin = await userManager.FindByEmailAsync("manager@pw.edu.pl");
+
+        if (admin == null)
+        {
+            admin = new ApplicationUser
+            {
+                FirstName = "Admin",
+                LastName = "Hehe",
+                UserName = "hehe",
+                Email = "admin@pw.edu.pl",
+                EmailConfirmed = true
+            };
+
+            await userManager.CreateAsync(admin, "Password123!");
+            await userManager.AddToRoleAsync(admin, UserRoleOptions.Admin.ToString());
         }
 
     }
