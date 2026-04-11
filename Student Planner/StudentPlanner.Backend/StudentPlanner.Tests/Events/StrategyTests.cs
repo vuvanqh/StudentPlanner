@@ -96,7 +96,7 @@ public class StrategyTests
         Assert.Equal(eventRequest.EventDetails.Title, existingEvent.EventDetails.Title);
         Assert.Equal(eventRequest.FacultyId, existingEvent.FacultyId);
         _academicEventRepoMock.Verify(r => r.UpdateAsync(It.Is<AcademicEvent>(
-            e => e.Id == eventId &&  
+            e => e.Id == eventId &&
             e.EventDetails.Title == "New Title")), Times.Once);
     }
 
@@ -198,15 +198,15 @@ public class StrategyTests
             EventId = eventId,
             EventDetails = new EventDetails
             {
-                Title = "", 
+                Title = "",
                 StartTime = DateTime.UtcNow,
                 EndTime = DateTime.UtcNow.AddHours(1)
             }
         };
 
         _academicEventRepoMock.Setup(r => r.GetByIdAsync(eventId))
-            .ReturnsAsync(new AcademicEvent 
-            { 
+            .ReturnsAsync(new AcademicEvent
+            {
                 Id = eventId,
                 FacultyId = Guid.NewGuid(),
                 EventDetails = new EventDetails { Title = "Old", StartTime = DateTime.UtcNow, EndTime = DateTime.UtcNow.AddHours(1), Location = "Old" }
@@ -235,7 +235,32 @@ public class StrategyTests
         _academicEventRepoMock.Setup(r => r.GetByIdAsync(eventId))
             .ReturnsAsync((AcademicEvent?)null);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => strategy.ExecuteAsync(eventRequest));
+        await Assert.ThrowsAsync<ArgumentException>(() => strategy.ExecuteAsync(eventRequest));
+    }
+
+    [Fact]
+    public async Task DeleteApprovalStrategy_ExecuteAsync_ShouldNotThrow_WhenEventNotFound()
+    {
+        var strategy = new DeleteApprovalStrategy(_academicEventRepo);
+        var eventId = Guid.NewGuid();
+        var eventRequest = new EventRequest
+        {
+            Id = Guid.NewGuid(),
+            FacultyId = Guid.NewGuid(),
+            ManagerId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            RequestType = RequestType.Delete,
+            Status = RequestStatus.Pending,
+            EventId = eventId,
+            EventDetails = new EventDetails { Title = "Title" }
+        };
+
+        _academicEventRepoMock.Setup(r => r.GetByIdAsync(eventId))
+            .ReturnsAsync((AcademicEvent?)null);
+
+        var exception = await Record.ExceptionAsync(() => strategy.ExecuteAsync(eventRequest));
+        Assert.Null(exception);
+        _academicEventRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Guid>()), Times.Never);
     }
 
     [Fact]
@@ -291,7 +316,7 @@ public class StrategyTests
             EventDetails = new EventDetails
             {
                 Title = "Title",
-                Location = "", 
+                Location = "",
                 StartTime = DateTime.UtcNow,
                 EndTime = DateTime.UtcNow.AddHours(1)
             }
@@ -316,7 +341,7 @@ public class StrategyTests
             {
                 Title = "Title",
                 Location = "Staff",
-                StartTime = default, 
+                StartTime = default,
                 EndTime = DateTime.UtcNow.AddHours(1)
             }
         };
@@ -341,7 +366,7 @@ public class StrategyTests
                 Title = "Title",
                 Location = "Staff",
                 StartTime = DateTime.UtcNow,
-                EndTime = default 
+                EndTime = default
             }
         };
 

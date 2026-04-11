@@ -217,7 +217,7 @@ public class EventRequestController : ControllerBase
         }
         catch (ArgumentException ex) when (ex.Message.Contains("exist", StringComparison.OrdinalIgnoreCase))
         {
-            _logger.LogWarning("Admin {AdminId} attempted to approve non-existent event request {RequestId}", User.FindFirst(ClaimTypes.NameIdentifier)?.Value, requestId);
+            _logger.LogWarning(ex, "Admin {AdminId} attempted to approve non-existent event request {RequestId}", User.FindFirst(ClaimTypes.NameIdentifier)?.Value, requestId);
             return NotFound(new { Message = ex.Message });
         }
         catch (InvalidOperationException ex)
@@ -259,7 +259,7 @@ public class EventRequestController : ControllerBase
         }
         catch (ArgumentException ex) when (ex.Message.Contains("exist", StringComparison.OrdinalIgnoreCase))
         {
-            _logger.LogWarning("Admin {AdminId} attempted to reject non-existent event request {RequestId}", User.FindFirst(ClaimTypes.NameIdentifier)?.Value, requestId);
+            _logger.LogWarning(ex, "Admin {AdminId} attempted to reject non-existent event request {RequestId}", User.FindFirst(ClaimTypes.NameIdentifier)?.Value, requestId);
             return NotFound(new { Message = ex.Message });
         }
         catch (InvalidOperationException ex)
