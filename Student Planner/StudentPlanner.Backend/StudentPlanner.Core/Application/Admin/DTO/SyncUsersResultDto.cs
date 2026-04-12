@@ -5,4 +5,5 @@ public class SyncUsersResultDto
     public int ValidUsers{get;set;}
     public int DisabledUsers{get;set;}
     public int FailedChecks{get;set;}
+    public List<string> FailedUsersEmail {get; set;} = new();
 }

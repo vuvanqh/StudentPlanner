@@ -38,6 +38,7 @@ public class AdminService : IAdminService
                     continue;
                 }
                 //DisableLogic here
+                results.FailedUsersEmail.Add(user.Email);
                 results.DisabledUsers++;
             }
             catch
@@ -49,6 +50,13 @@ public class AdminService : IAdminService
     }
     private async Task<bool> isUserValid(Entities.User user)
     {
+
+        if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(user.Role, "Manager", StringComparison.OrdinalIgnoreCase))
+        {
+        return true;
+        }
+
         if (string.IsNullOrWhiteSpace(user.UsosToken))
             return false;
 
