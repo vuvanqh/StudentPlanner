@@ -14,5 +14,4 @@ public record LoginResponseDto
     public string LastName { get; set; } = null!;
     [EmailAddress]
     public string? Email { get; set; } = null!;
-    public string? UsosToken {get; set;} = null!;
 }

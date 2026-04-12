@@ -44,7 +44,6 @@ public class AuthenticationService : IAuthenticationService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            UsosToken = response.UsosToken
         }, refreshTokenResult);
     }
 

@@ -456,14 +456,14 @@ public class EventRequestTests
     {
         Guid adminId = Guid.NewGuid();
         Guid requestId = Guid.NewGuid();
-
+        Guid existingEventId = Guid.NewGuid();
         EventRequest eventRequest = new EventRequest
         {
             Id = requestId,
             FacultyId = Guid.NewGuid(),
             ManagerId = Guid.NewGuid(),
             ReviewedByAdminId = null,
-            EventId = Guid.NewGuid(),
+            EventId = existingEventId,
             EventDetails = new EventDetails
             {
                 Title = "Update Event",
@@ -477,9 +477,25 @@ public class EventRequestTests
             RequestType = RequestType.Update,
             Status = RequestStatus.Pending
         };
+        AcademicEvent existingEvent = new AcademicEvent
+        {
+        Id = existingEventId,
+        FacultyId = eventRequest.FacultyId,
+        EventDetails = new EventDetails
+        {
+            Title = "Old Event",
+            StartTime = DateTime.UtcNow.AddDays(1),
+            EndTime = DateTime.UtcNow.AddDays(1).AddHours(1),
+            Location = "Old Room",
+            Description = "Old Description"
+        }
+        };
 
         _eventRequestRepoMock.Setup(r => r.GetByIdAsync(requestId))
             .ReturnsAsync(eventRequest);
+         _academicEventRepoMock
+        .Setup(r => r.GetByIdAsync(existingEventId))
+        .ReturnsAsync(existingEvent);
 
         EventRequestService service = CreateService();
 
@@ -488,6 +504,7 @@ public class EventRequestTests
         Assert.Equal(RequestStatus.Approved, eventRequest.Status);
         Assert.Equal(adminId, eventRequest.ReviewedByAdminId);
         Assert.NotNull(eventRequest.ReviewedAt);
+        
 
         _eventRequestRepoMock.Verify(r => r.UpdateAsync(eventRequest), Times.Once);
     }
