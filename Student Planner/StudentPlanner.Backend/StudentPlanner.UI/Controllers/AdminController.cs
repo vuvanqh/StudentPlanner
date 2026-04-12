@@ -16,23 +16,43 @@ namespace StudentPlanner.UI.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;
+    /// <summary>
+    /// Creates an Admin Controller which uses only adminService
+    /// </summary>
     public AdminController(IAdminService adminService)
     {
         _adminService = adminService;
     }
 
+    /// <summary>
+    /// Deletes user Form of the LINK : admin/users/{userId(fromDb)}
+    /// </summary>
     [HttpDelete("users/{userId:guid}")]
     public async Task<IActionResult> DeleteUser(Guid userId)
     {
         await _adminService.DeleteUserAsync(userId);
         return NoContent(); // can be Ok potentially
     }
+    /// <summary>
+    /// Syncs users with the current Usos Active inactive structure on click 
+    /// currently has an issue with UsosTokens as on outdate it will track them as 'bad'
+    /// </summary>
     [HttpPost("users/sync")]
     public async Task<ActionResult<SyncUsersResultDto>> SyncUsers()
     {
         var result = await _adminService.SyncUsersWithUsosAsync();
         return Ok(result);
     }
+    /// <summary>
+    /// Creates and Registers Manager
+    /// Body:
+    /// {
+    /// "firstName": NAme,
+    ///"lastName": Surname",
+    ///"facultyId": ID(used UsosId)
+    /// }
+    /// </summary>
+
     [HttpPost("managers")]
     public async Task<ActionResult<ManagerCreationResultDto>> CreateManager([FromBody] CreateManagerRequestDto request)
     {
