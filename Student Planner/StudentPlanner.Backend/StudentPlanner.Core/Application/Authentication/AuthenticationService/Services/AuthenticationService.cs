@@ -34,9 +34,12 @@ public class AuthenticationService : IAuthenticationService
         var roles = await _identityService.GetUserRolesAsync(user);
         var role = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
 
-        RefreshTokenResult refreshTokenResult = await _refreshTokenService.IssueOnLogin(user);
-        UsosLoginResponse response = await _usosAuthService.LoginAsync(request.Email, request.Password);
+        if (string.Equals(role, UserRoleOptions.Student.ToString(), StringComparison.OrdinalIgnoreCase))
+        {
+        var response = await _usosAuthService.LoginAsync(request.Email, request.Password);
         await _identityService.UpdateUsosToken(response.UsosToken, user);
+        }
+        RefreshTokenResult refreshTokenResult = await _refreshTokenService.IssueOnLogin(user);
         return (new LoginResponseDto
         {
             Token = _jwtService.CreateToken(user),
