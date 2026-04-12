@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Moq;
 namespace StudentPlanner.Tests.Usos;
+
 public class UsosEventsControllerE2ETests : IntegrationTestBase
 {
     public UsosEventsControllerE2ETests(StudentPlannerWebApplicationFactory factory) : base(factory)

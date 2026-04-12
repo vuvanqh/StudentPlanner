@@ -479,23 +479,23 @@ public class EventRequestTests
         };
         AcademicEvent existingEvent = new AcademicEvent
         {
-        Id = existingEventId,
-        FacultyId = eventRequest.FacultyId,
-        EventDetails = new EventDetails
-        {
-            Title = "Old Event",
-            StartTime = DateTime.UtcNow.AddDays(1),
-            EndTime = DateTime.UtcNow.AddDays(1).AddHours(1),
-            Location = "Old Room",
-            Description = "Old Description"
-        }
+            Id = existingEventId,
+            FacultyId = eventRequest.FacultyId,
+            EventDetails = new EventDetails
+            {
+                Title = "Old Event",
+                StartTime = DateTime.UtcNow.AddDays(1),
+                EndTime = DateTime.UtcNow.AddDays(1).AddHours(1),
+                Location = "Old Room",
+                Description = "Old Description"
+            }
         };
 
         _eventRequestRepoMock.Setup(r => r.GetByIdAsync(requestId))
             .ReturnsAsync(eventRequest);
-         _academicEventRepoMock
-        .Setup(r => r.GetByIdAsync(existingEventId))
-        .ReturnsAsync(existingEvent);
+        _academicEventRepoMock
+       .Setup(r => r.GetByIdAsync(existingEventId))
+       .ReturnsAsync(existingEvent);
 
         EventRequestService service = CreateService();
 
@@ -504,7 +504,7 @@ public class EventRequestTests
         Assert.Equal(RequestStatus.Approved, eventRequest.Status);
         Assert.Equal(adminId, eventRequest.ReviewedByAdminId);
         Assert.NotNull(eventRequest.ReviewedAt);
-        
+
 
         _eventRequestRepoMock.Verify(r => r.UpdateAsync(eventRequest), Times.Once);
     }

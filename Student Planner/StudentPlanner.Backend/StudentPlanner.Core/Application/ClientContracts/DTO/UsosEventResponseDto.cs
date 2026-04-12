@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 namespace StudentPlanner.Core.Application.ClientContracts.DTO;
+
 public record UsosEventResponseDto
 {
     [JsonPropertyName("title")]

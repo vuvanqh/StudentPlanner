@@ -153,9 +153,9 @@ public class AuthenticationServiceTests
             UsosToken = "fresh-usos-token"
         });
 
-    _identityServiceMock
-        .Setup(s => s.UpdateUsosToken("fresh-usos-token", user))
-        .Returns(Task.CompletedTask);
+        _identityServiceMock
+            .Setup(s => s.UpdateUsosToken("fresh-usos-token", user))
+            .Returns(Task.CompletedTask);
 
 
         var (loginResponse, refreshResult) = await _authService.LoginAsync(request);
@@ -189,9 +189,9 @@ public class AuthenticationServiceTests
             UsosToken = "fresh-usos-token"
         });
 
-    _identityServiceMock
-        .Setup(s => s.UpdateUsosToken("fresh-usos-token", user))
-        .Returns(Task.CompletedTask);
+        _identityServiceMock
+            .Setup(s => s.UpdateUsosToken("fresh-usos-token", user))
+            .Returns(Task.CompletedTask);
 
         var (loginResponse, _) = await _authService.LoginAsync(request);
 

@@ -81,28 +81,28 @@ public class UsosClient : IUsosClient
         }).ToList();
     }
     public async Task<List<UsosEventResponseDto>> GetTimetableAsync(string usosToken, DateOnly start, int days)
-{
-    using var request = new HttpRequestMessage(
-        HttpMethod.Get,
-        $"/services/tt/user?start={start:yyyy-MM-dd}&days={days}");
-
-    request.Headers.Authorization =
-        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", usosToken);
-
-    var response = await _httpClient.SendAsync(request);
-
-    if (!response.IsSuccessStatusCode)
     {
-        _logger.LogWarning("Fetching USOS timetable failed. Status: {StatusCode}", response.StatusCode);
-        throw new UsosException($"Fetching timetable failed with status {response.StatusCode}");
+        using var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"/services/tt/user?start={start:yyyy-MM-dd}&days={days}");
+
+        request.Headers.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", usosToken);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogWarning("Fetching USOS timetable failed. Status: {StatusCode}", response.StatusCode);
+            throw new UsosException($"Fetching timetable failed with status {response.StatusCode}");
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<List<UsosEventResponseDto>>();
+
+        if (result == null)
+            throw new InvalidResponseException("USOS returned empty timetable response.");
+
+        return result;
     }
-
-    var result = await response.Content.ReadFromJsonAsync<List<UsosEventResponseDto>>();
-
-    if (result == null)
-        throw new InvalidResponseException("USOS returned empty timetable response.");
-
-    return result;
-}
 
 }

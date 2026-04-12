@@ -12,6 +12,7 @@ using StudentPlanner.UI.Controllers;
 using System.Security.Claims;
 using Xunit;
 namespace StudentPlanner.Tests.Usos;
+
 public class UsosEventsControllerTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock;
@@ -23,10 +24,10 @@ public class UsosEventsControllerTests
         _usosClientMock = new Mock<IUsosClient>();
     }
 
-     private static UsosEventsController CreateController(
-        IUserRepository userRepository,
-        IUsosClient usosClient,
-        ClaimsPrincipal? user = null)
+    private static UsosEventsController CreateController(
+       IUserRepository userRepository,
+       IUsosClient usosClient,
+       ClaimsPrincipal? user = null)
     {
         return new UsosEventsController(userRepository, usosClient)
         {
