@@ -1,4 +1,6 @@
 using Serilog;
+using Microsoft.EntityFrameworkCore;
+using StudentPlanner.Infrastructure;
 
 namespace StudentPlanner.Backend;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +34,18 @@ public class Program
         });
 
         var app = builder.Build();
+<<<<<<< HEAD
         using (var scope = app.Services.CreateScope())
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             dbContext.Database.Migrate();
+=======
+        if (!app.Environment.IsEnvironment("Testing"))
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            db.Database.Migrate();
+>>>>>>> origin/development/usos_events
         }
 
         app.UseRouting();

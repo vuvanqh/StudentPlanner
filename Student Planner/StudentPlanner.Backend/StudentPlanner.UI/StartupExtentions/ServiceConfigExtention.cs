@@ -5,6 +5,8 @@ using StudentPlanner.Core.Application.Authentication;
 using StudentPlanner.Infrastructure.Services.Settings;
 using StudentPlanner.Core.Application.PersonalEvents;
 using StudentPlanner.Core.Application.EventRequests;
+using StudentPlanner.Core.Application.AcademicEvents.ServiceContracts;
+using StudentPlanner.Core.Application.AcademicEvents.Services;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Infrastructure.Identity;
 using StudentPlanner.Infrastructure.Repositories;
@@ -34,6 +36,7 @@ public static class ServiceConfigExtention
         services.AddScoped<IPersonalEventService, PersonalEventService>();
         services.AddScoped<IEventRequestService, EventRequestService>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IAcademicEventService, AcademicEventService>();
         services.AddTransient<IJwtService, JwtService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
@@ -52,8 +55,13 @@ public static class ServiceConfigExtention
         //repo
         services.AddScoped<IPersonalEventRepository, PersonalEventRepository>();
         services.AddScoped<IEventRequestRepository, EventRequestRepository>();
+        services.AddScoped<IAcademicEventRepository, AcademicEventRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFacultyRepository, FacultyRepository>();
+
+        services.AddTransient<StudentPlanner.Core.Application.EventRequests.Strategies.CreateApprovalStrategy>();
+        services.AddTransient<StudentPlanner.Core.Application.EventRequests.Strategies.UpdateApprovalStrategy>();
+        services.AddTransient<StudentPlanner.Core.Application.EventRequests.Strategies.DeleteApprovalStrategy>();
 
         //hosted
         services.AddHostedService<FacultyBootstrapService>();

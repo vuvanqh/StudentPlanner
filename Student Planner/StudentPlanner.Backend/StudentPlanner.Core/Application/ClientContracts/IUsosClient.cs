@@ -1,4 +1,5 @@
 using StudentPlanner.Core.Domain.Entities;
+using StudentPlanner.Core.Application.ClientContracts.DTO;
 namespace StudentPlanner.Core.Application.Authentication;
 
 
@@ -6,5 +7,5 @@ public interface IUsosClient
 {
     Task<UsosLoginResponse> LoginAsync(string email, string password);
     Task<List<Faculty>> GetFacultiesAsync();
-    Task<List<UsosStudentDto>> GetStudentsByFacultyAsync(string usosToken, string facultyId);
+    Task<List<UsosEventResponseDto>> GetTimetableAsync(string usosToken, DateOnly start, int days);
 }

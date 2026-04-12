@@ -48,7 +48,8 @@ public class IdentityService : IIdentityService
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            FacultyId = facultyId
+            FacultyId = facultyId,
+            UsosToken = user.UsosToken
         };
 
         var result = await _userManager.CreateAsync(appUser, password);
@@ -135,4 +136,10 @@ public class IdentityService : IIdentityService
         return users;
     }
 
+    public async Task UpdateUsosToken(string UsosToken, User user)
+    {
+        ApplicationUser appUser = (await _userManager.FindByEmailAsync(user.Email)) ?? throw new InvalidOperationException("User not found");
+        appUser.UsosToken = UsosToken;
+        await _userManager.UpdateAsync(appUser);
+    }
 }
