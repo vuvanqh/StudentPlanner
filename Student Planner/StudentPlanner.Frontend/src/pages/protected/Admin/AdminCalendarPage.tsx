@@ -1,16 +1,14 @@
-import { useState,  useContext , type ReactNode} from "react";
+import { useState, type ReactNode} from "react";
 import EventPanel from "../../../components/calendar/EventPanel";
 import ManagerCalendar from "../../../features/managerCalendar/components/ManagerCalendar";
 import type { personalEventResponse } from "../../../types/personalEventTypes";
-import { useMyEventRequests } from "../../../features/eventRequests/hooks/eventRequestHooks";
+import { useAllEventRequests } from "../../../features/eventRequests/hooks/eventRequestHooks";
 import { EventPreview } from "../../../features/events/components/EventPreview";
-import { EventRequestPreview } from "../../../features/eventRequests/components/EventRequestPreview";
-import { ModalContext } from "../../../store/ModalContext";
+import AdminRequestPreview from "../../../features/eventRequests/components/AdminRequestPreview";
 
-export default function ManagerCalendarPage(){
+export default function AdminCalendarPage(){
     const [viewRequests, setVievRequests] = useState(false);
-    const {eventRequests} = useMyEventRequests();
-    const {open} = useContext(ModalContext);
+    const {eventRequests} = useAllEventRequests();
     const top10:personalEventResponse[] = [];
     // [...events].sort((a, b) => {
     //     const dateA = new Date(a.startTime);
@@ -28,7 +26,7 @@ export default function ManagerCalendarPage(){
         <ul className="events-list">
             {eventRequests.map(e => (
             <li key={e.id}>
-                <EventRequestPreview eventRequest={e} />
+                <AdminRequestPreview eventRequest={e} />
             </li>
             ))}
         </ul>
@@ -53,8 +51,6 @@ export default function ManagerCalendarPage(){
         <ManagerCalendar events={[]}/>
         <EventPanel label={viewRequests?"Recent Requests":"Upcoming events"}>
             <div className="events-controls">
-                <button className="primary-action" onClick={()=>open({type:"createRequest"})}>+ Create Request</button>
-
                 <div className="toggle-group">
                     <button className={`toggle-btn ${!viewRequests ? "active" : ""}`} onClick={()=>setVievRequests(false)}>View Events</button>
                     <button className={`toggle-btn ${viewRequests ? "active" : ""}`} onClick={()=>setVievRequests(true)}>View Requests</button>

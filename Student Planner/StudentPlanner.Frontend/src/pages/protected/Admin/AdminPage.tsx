@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "../../../global-hooks/authHooks";
 import DashboardLayout from "../common/Dashboard";
 
-export default function ManagerPage(){
+export default function AdminPage(){
     const navigate = useNavigate();
     const {user} = useUser();
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,6 +38,7 @@ export default function ManagerPage(){
     return <DashboardLayout navItems={<>
         <NavLink to="" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Calendar</NavLink>
         <NavLink to="/requests" onClick={(e)=>e.preventDefault()} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Events</NavLink>
-        <NavLink to="/events" onClick={(e)=>e.preventDefault()} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>My Requests</NavLink>
+        <NavLink to="/events" onClick={(e)=>e.preventDefault()} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Event Requests</NavLink>
+        <NavLink to="/requests" onClick={(e)=>e.preventDefault()} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Users</NavLink>
     </>}/>
 } 

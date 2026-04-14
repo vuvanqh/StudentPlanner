@@ -11,6 +11,8 @@ using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Infrastructure.Identity;
 using StudentPlanner.Infrastructure.Repositories;
 using StudentPlanner.Infrastructure.Services;
+using StudentPlanner.Core.Application.ServiceContracts;
+using StudentPlanner.Core.Application.Services;
 
 namespace StudentPlanner.Backend;
 
@@ -42,6 +44,7 @@ public static class ServiceConfigExtention
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, MailtrapEmailService>();
+        services.AddScoped<IFacultyService, FacultyService>();
 
         services.AddHttpClient<IUsosClient, UsosClient>(client =>
         {
