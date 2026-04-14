@@ -3,6 +3,7 @@ using StudentPlanner.Core.Application.Authentication;
 using StudentPlanner.Core.Application.Admin.DTO;
 using System.Security.AccessControl;
 using StudentPlanner.Core.Entities;
+using StudentPlanner.Core.Application.Exceptions;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 namespace StudentPlanner.Core;
 
@@ -45,10 +46,21 @@ public class AdminService : IAdminService
                 results.FailedUsersEmail.Add(user.Email);
                 results.DisabledUsers++;
             }
-            catch
-            {
-                results.FailedChecks++;
-            }
+            catch (UsosException ex) when (ShouldDeleteStudent(user, ex))
+        {
+            await _identityService.DeleteUserAsync(user.Id);
+
+            results.FailedUsersEmail.Add(user.Email);
+            results.DisabledUsers++;
+        }
+        catch (UsosException)
+        {
+            results.FailedChecks++;
+        }
+        catch
+        {
+            results.FailedChecks++;
+        }
         }
         return results;
     }
@@ -80,6 +92,16 @@ public class AdminService : IAdminService
         return true;
         //More checks if needed here
 
+    }
+    private static bool ShouldDeleteStudent(User user, UsosException ex)
+    {
+    if (!string.Equals(user.Role, "Student", StringComparison.OrdinalIgnoreCase))
+        return false;
+
+    if (ex.StatusCode != System.Net.HttpStatusCode.Unauthorized)
+        return false;
+
+    return ex.ResponseError?.Contains("Student not found", StringComparison.OrdinalIgnoreCase) == true;
     }
     public async Task<ManagerCreationResultDto> CreateManagerAsync(CreateManagerRequestDto request)
     {

@@ -89,12 +89,16 @@ public class UsosClient : IUsosClient
 
         if (!response.IsSuccessStatusCode)
         {
+            var errorBody = await response.Content.ReadAsStringAsync();
             _logger.LogWarning(
-                "Failed to fetch faculty users from USOS for faculty {FacultyId}. Status code: {StatusCode}",
+                "Failed to fetch faculty users from USOS for faculty {FacultyId}. Status code: {StatusCode}. Body: {Body}",
                 facultyId,
-                (int)response.StatusCode);
+                (int)response.StatusCode, errorBody);
 
-            throw new UsosException($"Failed to fetch users for faculty {facultyId}. Status code: {response.StatusCode}");
+             throw new UsosException(
+            $"Failed to fetch users for faculty {facultyId}.",
+            response.StatusCode,
+            errorBody);
         }
 
         var students = await response.Content.ReadFromJsonAsync<List<UsosStudentResponseDto>>();
