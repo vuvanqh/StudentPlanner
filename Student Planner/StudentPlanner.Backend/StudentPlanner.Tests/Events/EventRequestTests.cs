@@ -423,7 +423,6 @@ public class EventRequestTests
     {
         Guid adminId = Guid.NewGuid();
         Guid requestId = Guid.NewGuid();
-        Guid existingEventId = Guid.NewGuid();
         EventRequest eventRequest = new EventRequest
         {
             Id = requestId,
@@ -485,9 +484,8 @@ public class EventRequestTests
             RequestType = RequestType.Update,
             Status = RequestStatus.Pending
         };
-
         _eventRequestRepoMock.Setup(r => r.GetByIdAsync(requestId))
-            .ReturnsAsync(eventRequest);
+           .ReturnsAsync(eventRequest);
         _updateStrategyMock.Setup(s => s.ExecuteAsync(eventRequest))
             .Returns(Task.CompletedTask);
 

@@ -30,7 +30,7 @@ public static class IdentitySeeder
                 LastName = "Hehe",
                 UserName = "hehe",
                 Email = "manager@pw.edu.pl",
-                FacultyId = Guid.Parse("ff8c5ad6-e743-4756-aaf9-7f56d686e57f"),
+                // FacultyId = Guid.Parse("ff8c5ad6-e743-4756-aaf9-7f56d686e57f"),
                 EmailConfirmed = true
             };
 
@@ -41,7 +41,7 @@ public static class IdentitySeeder
         if (!await roleManager.RoleExistsAsync(UserRoleOptions.Admin.ToString()))
             await roleManager.CreateAsync(new ApplicationRole { Name = UserRoleOptions.Admin.ToString() });
 
-        var admin = await userManager.FindByEmailAsync("manager@pw.edu.pl");
+        var admin = await userManager.FindByEmailAsync("admin@pw.edu.pl");
 
         if (admin == null)
         {

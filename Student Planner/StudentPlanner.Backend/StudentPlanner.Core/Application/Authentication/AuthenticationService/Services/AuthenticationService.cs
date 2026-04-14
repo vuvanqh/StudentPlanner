@@ -1,6 +1,7 @@
 using StudentPlanner.Core.Application.Authentication;
 using StudentPlanner.Core.Application;
 using StudentPlanner.Core.Entities;
+using StudentPlanner.Core.Application.ClientContracts;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Core.Domain.Entities;
 
@@ -34,6 +35,11 @@ public class AuthenticationService : IAuthenticationService
         var roles = await _identityService.GetUserRolesAsync(user);
         var role = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
 
+        if (string.Equals(role, UserRoleOptions.Student.ToString(), StringComparison.OrdinalIgnoreCase))
+        {
+            var response = await _usosAuthService.LoginAsync(request.Email, request.Password);
+            await _identityService.UpdateUsosToken(response.Token, user);
+        }
         RefreshTokenResult refreshTokenResult = await _refreshTokenService.IssueOnLogin(user);
         UsosLoginResponse response = await _usosAuthService.LoginAsync(request.Email, request.Password);
         await _identityService.UpdateUsosToken(response.UsosToken, user);

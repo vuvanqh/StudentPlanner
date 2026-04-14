@@ -4,6 +4,7 @@ using Xunit;
 using Moq;
 using StudentPlanner.Core.Application.Authentication;
 using StudentPlanner.Core.Application;
+using StudentPlanner.Core.Application.ClientContracts;
 using StudentPlanner.Core.Entities;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using FluentAssertions;
@@ -150,7 +151,7 @@ public class AuthenticationServiceTests
             FirstName = user.FirstName,
             LastName = user.LastName,
             FacultyId = "FAC001",
-            UsosToken = "fresh-usos-token"
+            Token = "fresh-usos-token"
         });
 
         _identityServiceMock
@@ -186,7 +187,7 @@ public class AuthenticationServiceTests
             FirstName = user.FirstName,
             LastName = user.LastName,
             FacultyId = "FAC001",
-            UsosToken = "fresh-usos-token"
+            Token = "fresh-usos-token"
         });
 
         _identityServiceMock
