@@ -81,7 +81,7 @@ public class AuthenticationServiceTests
             FirstName = "John",
             LastName = "Doe",
             FacultyId = "FAC001",
-            UsosToken = "usos-token"
+            Token = "usos-token"
         };
 
         var faculty = new Faculty { Id = Guid.NewGuid(), FacultyId = "FAC001", FacultyName = "Electronics", FacultyCode = "EL" };
@@ -117,7 +117,7 @@ public class AuthenticationServiceTests
             FirstName = "John",
             LastName = "Doe",
             FacultyId = "UNKNOWN",
-            UsosToken = "usos-token"
+            Token = "usos-token"
         };
 
         _userRepoMock.Setup(repo => repo.GetUserByEmailAsync(request.Email)).ReturnsAsync((User?)null);
@@ -150,7 +150,7 @@ public class AuthenticationServiceTests
             FirstName = user.FirstName,
             LastName = user.LastName,
             FacultyId = "FAC001",
-            UsosToken = "fresh-usos-token"
+            Token = "fresh-usos-token"
         });
 
         _identityServiceMock
@@ -186,7 +186,7 @@ public class AuthenticationServiceTests
             FirstName = user.FirstName,
             LastName = user.LastName,
             FacultyId = "FAC001",
-            UsosToken = "fresh-usos-token"
+            Token = "fresh-usos-token"
         });
 
         _identityServiceMock

@@ -12,17 +12,10 @@ public class EventRequestService : IEventRequestService
 
     public EventRequestService(
         IEventRequestRepository eventRequestRepository,
-        CreateApprovalStrategy createStrategy,
-        UpdateApprovalStrategy updateStrategy,
-        DeleteApprovalStrategy deleteStrategy)
+        IEnumerable<IEventRequestApprovalStrategy> strategies)
     {
         _eventRequestRepository = eventRequestRepository;
-        _strategies = new Dictionary<RequestType, IEventRequestApprovalStrategy>
-        {
-            { RequestType.Create, createStrategy },
-            { RequestType.Update, updateStrategy },
-            { RequestType.Delete, deleteStrategy }
-        };
+        _strategies = strategies.ToDictionary(s => s.RequestType, s => s);
     }
 
     public async Task<Guid> CreateAsync(Guid managerId, CreateEventRequestRequest request)
@@ -36,19 +29,7 @@ public class EventRequestService : IEventRequestService
         {
             throw new ArgumentException("Update and Delete requests must contain EventId.");
         }
-        EventRequest eventRequest = new EventRequest
-        {
-            Id = Guid.NewGuid(),
-            FacultyId = request.FacultyId,
-            ManagerId = managerId,
-            ReviewedByAdminId = null,
-            EventId = request.EventId,
-            EventDetails = request.EventDetails,
-            CreatedAt = DateTime.UtcNow,
-            ReviewedAt = null,
-            RequestType = request.RequestType,
-            Status = RequestStatus.Pending
-        };
+        EventRequest eventRequest = request.ToEventRequest(managerId);
         await _eventRequestRepository.AddAsync(eventRequest);
         return eventRequest.Id;
     }

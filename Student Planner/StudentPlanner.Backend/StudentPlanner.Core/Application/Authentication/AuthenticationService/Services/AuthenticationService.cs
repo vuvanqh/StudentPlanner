@@ -37,7 +37,7 @@ public class AuthenticationService : IAuthenticationService
         if (string.Equals(role, UserRoleOptions.Student.ToString(), StringComparison.OrdinalIgnoreCase))
         {
             var response = await _usosAuthService.LoginAsync(request.Email, request.Password);
-            await _identityService.UpdateUsosToken(response.UsosToken, user);
+            await _identityService.UpdateUsosToken(response.Token, user);
         }
         RefreshTokenResult refreshTokenResult = await _refreshTokenService.IssueOnLogin(user);
         return (new LoginResponseDto
@@ -47,6 +47,8 @@ public class AuthenticationService : IAuthenticationService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
+            FacultyCode = user.Faculty?.FacultyCode,
+            FacultyId = user.Faculty?.Id
         }, refreshTokenResult);
     }
 
@@ -72,7 +74,7 @@ public class AuthenticationService : IAuthenticationService
             Email = request.Email,
             FirstName = response.FirstName,
             LastName = response.LastName,
-            UsosToken = response.UsosToken,
+            UsosToken = response.Token,
             Role = UserRoleOptions.Student.ToString()
         };
         await _identityService.RegisterUser(user, request.Password, faculty.Id, UserRoleOptions.Student.ToString());

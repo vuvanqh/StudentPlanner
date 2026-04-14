@@ -1,6 +1,5 @@
 using Serilog;
-using Microsoft.EntityFrameworkCore;
-using StudentPlanner.Infrastructure;
+using StudentPlanner.Infrastructure.Identity;
 
 namespace StudentPlanner.Backend;
 
@@ -20,7 +19,7 @@ public class Program
     /// The main entry point of the application.
     /// </summary>
     /// <param name="args">Arguments passed to the application.</param>
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +41,8 @@ public class Program
             db.Database.Migrate();
         }
 
+        await IdentitySeeder.SeedAsync(app.Services);
+
         app.UseRouting();
 
         app.UseCors("AllowFrontend");
@@ -58,6 +59,6 @@ public class Program
 
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
     }
 }
