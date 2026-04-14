@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentPlanner.Core.Application.Authentication;
+using StudentPlanner.Core.Application.Exceptions;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using System.Security.Claims;
 using System.Globalization;
@@ -35,6 +36,8 @@ public class UsosEventsController : ControllerBase
     [HttpGet("me")]
     public async Task<IActionResult> GetMyEvents([FromQuery] string? start, [FromQuery] int days = 30)
     {
+        try
+    {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrWhiteSpace(userIdClaim))
@@ -57,5 +60,18 @@ public class UsosEventsController : ControllerBase
         var events = await _usosClient.GetTimetableAsync(user.UsosToken, parsedStart, days);
 
         return Ok(events);
+    }
+    catch (FormatException)
+    {
+        return BadRequest(new { message = "Invalid start date format. Use yyyy-MM-dd." });
+    }
+    catch (UsosException ex)
+    {
+        return StatusCode(StatusCodes.Status502BadGateway, new { message = ex.Message });
+    }
+    catch (InvalidResponseException ex)
+    {
+        return StatusCode(StatusCodes.Status502BadGateway, new { message = ex.Message });
+    }
     }
 }

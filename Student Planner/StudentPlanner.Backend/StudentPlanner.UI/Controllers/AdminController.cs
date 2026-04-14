@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentPlanner.Core.Application.Authentication;
+using StudentPlanner.Core.Application.Exceptions;
 using StudentPlanner.Core.Entities;
 using StudentPlanner.Core;
 using StudentPlanner.Core.Application.Admin.DTO;
@@ -30,8 +31,15 @@ public class AdminController : ControllerBase
     [HttpDelete("users/{userId:guid}")]
     public async Task<IActionResult> DeleteUser(Guid userId)
     {
+         try
+    {
         await _adminService.DeleteUserAsync(userId);
-        return NoContent(); // can be Ok potentially
+        return NoContent();
+    }
+    catch (KeyNotFoundException ex)
+    {
+        return NotFound(new { message = ex.Message });
+    }
     }
     /// <summary>
     /// Syncs users with the current Usos Active inactive structure on click 
@@ -40,8 +48,15 @@ public class AdminController : ControllerBase
     [HttpPost("users/sync")]
     public async Task<ActionResult<SyncUsersResultDto>> SyncUsers()
     {
+         try
+    {
         var result = await _adminService.SyncUsersWithUsosAsync();
         return Ok(result);
+    }
+    catch (UsosException ex)
+    {
+        return StatusCode(StatusCodes.Status502BadGateway, new { message = ex.Message });
+    }
     }
     /// <summary>
     /// Creates and Registers Manager
@@ -56,8 +71,23 @@ public class AdminController : ControllerBase
     [HttpPost("managers")]
     public async Task<ActionResult<ManagerCreationResultDto>> CreateManager([FromBody] CreateManagerRequestDto request)
     {
+        try
+    {
         var result = await _adminService.CreateManagerAsync(request);
         return Ok(result);
+    }
+    catch (ArgumentNullException ex)
+    {
+        return BadRequest(new { message = ex.Message });
+    }
+    catch (ArgumentException ex)
+    {
+        return BadRequest(new { message = ex.Message });
+    }
+    catch (InvalidOperationException ex)
+    {
+        return BadRequest(new { message = ex.Message });
+    }
     }
 
 }
