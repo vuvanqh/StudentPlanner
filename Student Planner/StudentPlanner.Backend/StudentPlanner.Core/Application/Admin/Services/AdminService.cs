@@ -43,6 +43,7 @@ public class AdminService : IAdminService
                     continue;
                 }
                 //DisableLogic here
+                await DeleteUserAsync(user.Id);
                 results.FailedUsersEmail.Add(user.Email);
                 results.DisabledUsers++;
             }
