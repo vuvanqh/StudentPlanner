@@ -31,15 +31,15 @@ public class AdminController : ControllerBase
     [HttpDelete("users/{userId:guid}")]
     public async Task<IActionResult> DeleteUser(Guid userId)
     {
-         try
-    {
-        await _adminService.DeleteUserAsync(userId);
-        return NoContent();
-    }
-    catch (KeyNotFoundException ex)
-    {
-        return NotFound(new { message = ex.Message });
-    }
+        try
+        {
+            await _adminService.DeleteUserAsync(userId);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
     }
     /// <summary>
     /// Syncs users with the current Usos Active inactive structure on click 
@@ -48,15 +48,15 @@ public class AdminController : ControllerBase
     [HttpPost("users/sync")]
     public async Task<ActionResult<SyncUsersResultDto>> SyncUsers()
     {
-         try
-    {
-        var result = await _adminService.SyncUsersWithUsosAsync();
-        return Ok(result);
-    }
-    catch (UsosException ex)
-    {
-        return StatusCode(StatusCodes.Status502BadGateway, new { message = ex.Message });
-    }
+        try
+        {
+            var result = await _adminService.SyncUsersWithUsosAsync();
+            return Ok(result);
+        }
+        catch (UsosException ex)
+        {
+            return StatusCode(StatusCodes.Status502BadGateway, new { message = ex.Message });
+        }
     }
     /// <summary>
     /// Creates and Registers Manager
@@ -72,22 +72,22 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<ManagerCreationResultDto>> CreateManager([FromBody] CreateManagerRequestDto request)
     {
         try
-    {
-        var result = await _adminService.CreateManagerAsync(request);
-        return Ok(result);
-    }
-    catch (ArgumentNullException ex)
-    {
-        return BadRequest(new { message = ex.Message });
-    }
-    catch (ArgumentException ex)
-    {
-        return BadRequest(new { message = ex.Message });
-    }
-    catch (InvalidOperationException ex)
-    {
-        return BadRequest(new { message = ex.Message });
-    }
+        {
+            var result = await _adminService.CreateManagerAsync(request);
+            return Ok(result);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
 }

@@ -95,10 +95,10 @@ public class UsosClient : IUsosClient
                 facultyId,
                 (int)response.StatusCode, errorBody);
 
-             throw new UsosException(
-            $"Failed to fetch users for faculty {facultyId}.",
-            response.StatusCode,
-            errorBody);
+            throw new UsosException(
+           $"Failed to fetch users for faculty {facultyId}.",
+           response.StatusCode,
+           errorBody);
         }
 
         var students = await response.Content.ReadFromJsonAsync<List<UsosStudentResponseDto>>();

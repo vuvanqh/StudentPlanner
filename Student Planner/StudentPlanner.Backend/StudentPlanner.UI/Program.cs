@@ -38,7 +38,7 @@ public class Program
         {
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            db.Database.Migrate();
+            await db.Database.MigrateAsync();
         }
 
         await IdentitySeeder.SeedAsync(app.Services);

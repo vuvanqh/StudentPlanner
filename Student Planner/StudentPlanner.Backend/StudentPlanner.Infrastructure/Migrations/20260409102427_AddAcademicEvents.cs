@@ -34,7 +34,7 @@ public partial class AddAcademicEvents : Migration
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
             });
-        }
+    }
 
     //     migrationBuilder.CreateTable(
     //         name: "EventRequests",
@@ -111,6 +111,6 @@ public partial class AddAcademicEvents : Migration
             name: "AcademicEvents");
 
         // migrationBuilder.DropTable(
-            // name: "EventRequests");
+        // name: "EventRequests");
     }
 }

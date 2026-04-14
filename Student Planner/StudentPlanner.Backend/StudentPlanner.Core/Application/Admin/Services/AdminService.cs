@@ -48,20 +48,20 @@ public class AdminService : IAdminService
                 results.DisabledUsers++;
             }
             catch (UsosException ex) when (ShouldDeleteStudent(user, ex))
-        {
-            await _identityService.DeleteUserAsync(user.Id);
+            {
+                await _identityService.DeleteUserAsync(user.Id);
 
-            results.FailedUsersEmail.Add(user.Email);
-            results.DisabledUsers++;
-        }
-        catch (UsosException)
-        {
-            results.FailedChecks++;
-        }
-        catch
-        {
-            results.FailedChecks++;
-        }
+                results.FailedUsersEmail.Add(user.Email);
+                results.DisabledUsers++;
+            }
+            catch (UsosException)
+            {
+                results.FailedChecks++;
+            }
+            catch
+            {
+                results.FailedChecks++;
+            }
         }
         return results;
     }
@@ -96,13 +96,13 @@ public class AdminService : IAdminService
     }
     private static bool ShouldDeleteStudent(User user, UsosException ex)
     {
-    if (!string.Equals(user.Role, "Student", StringComparison.OrdinalIgnoreCase))
-        return false;
+        if (!string.Equals(user.Role, "Student", StringComparison.OrdinalIgnoreCase))
+            return false;
 
-    if (ex.StatusCode != System.Net.HttpStatusCode.Unauthorized)
-        return false;
+        if (ex.StatusCode != System.Net.HttpStatusCode.Unauthorized)
+            return false;
 
-    return ex.ResponseError?.Contains("Student not found", StringComparison.OrdinalIgnoreCase) == true;
+        return ex.ResponseError?.Contains("Student not found", StringComparison.OrdinalIgnoreCase) == true;
     }
     public async Task<ManagerCreationResultDto> CreateManagerAsync(CreateManagerRequestDto request)
     {
