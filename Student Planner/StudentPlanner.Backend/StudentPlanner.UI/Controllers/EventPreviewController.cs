@@ -22,6 +22,9 @@ public class EventPreviewController : ControllerBase
     public async Task<IActionResult> GetPreviews(DateTime? from, DateTime? to)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null)
+            return Unauthorized();
+
         var role = User.FindFirst(ClaimTypes.Role)?.Value;
         if (!Enum.TryParse<UserRoleOptions>(role, true, out var parsedRole))
             return BadRequest("Invalid role");

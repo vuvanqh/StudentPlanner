@@ -1,6 +1,5 @@
 using Serilog;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using StudentPlanner.Infrastructure;
 using StudentPlanner.Infrastructure.Identity;
 using StudentPlanner.UI.Hubs;
