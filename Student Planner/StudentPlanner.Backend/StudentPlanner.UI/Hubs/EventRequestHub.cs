@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace StudentPlanner.UI.Hubs;
 
-public class EventRequestHub: Hub
+public class EventRequestHub : Hub
 {
     private readonly ILogger<EventRequestHub> _logger;
     public EventRequestHub(ILogger<EventRequestHub> logger) => _logger = logger;
