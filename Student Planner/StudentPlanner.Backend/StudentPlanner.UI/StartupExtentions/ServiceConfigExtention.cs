@@ -10,6 +10,7 @@ using StudentPlanner.Core.Application.EventRequests.Strategies;
 using StudentPlanner.Core.Application.Events.EventPreveiws;
 using StudentPlanner.Core.Application.Events.UsosEvents.ServiceContracts;
 using StudentPlanner.Core.Application.Events.UsosEvents.Services;
+using StudentPlanner.Core.Application.Notifications.ServiceContracts;
 using StudentPlanner.Core.Application.PersonalEvents;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Infrastructure.Identity;
@@ -17,6 +18,7 @@ using StudentPlanner.Infrastructure.Repositories;
 using StudentPlanner.Infrastructure.Repositories.Events;
 using StudentPlanner.Infrastructure.Services;
 using StudentPlanner.Infrastructure.Services.Settings;
+using StudentPlanner.UI.NotificationServices;
 namespace StudentPlanner.Backend;
 
 /// <summary>
@@ -52,6 +54,8 @@ public static class ServiceConfigExtention
         services.AddScoped<IUsosEventRepository, UsosEventRepository>();
         services.AddScoped<IEventPreviewService, EventPreviewService>();
 
+        //notification services
+        services.AddScoped<IEventRequestNotificationService, EventRequestNotificationService>();
 
         //clients
         services.AddHttpClient<IUsosClient, UsosClient>(client =>

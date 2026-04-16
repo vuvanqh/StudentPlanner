@@ -28,6 +28,9 @@ public static class BaselineConfigExtention
             options.LowercaseUrls = true;
         });
 
+        //SignalR
+        services.AddSignalR();
+
         //cors
         services.AddCors(options =>
         {
