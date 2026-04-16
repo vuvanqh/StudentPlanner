@@ -17,12 +17,12 @@ public class FacultyRepository : IFacultyRepository
 
     public async Task<List<Faculty>> GetAllFacultiesAsync()
     {
-        return await _context.Faculties.Select(f => f.ToFaculty()).ToListAsync();  
+        return await _context.Faculties.Select(f => f.ToFaculty()).ToListAsync();
     }
 
     public async Task<Faculty?> GetFacultyByIdAsync(Guid facultyId)
     {
-        return (await _context.Faculties.FirstOrDefaultAsync(f => f.Id ==  facultyId))?.ToFaculty();
+        return (await _context.Faculties.FirstOrDefaultAsync(f => f.Id == facultyId))?.ToFaculty();
     }
 
     public async Task<Faculty?> GetFacultyByUsosIdAsync(string facultyId)

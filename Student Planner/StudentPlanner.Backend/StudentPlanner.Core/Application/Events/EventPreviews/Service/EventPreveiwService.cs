@@ -19,7 +19,7 @@ public class EventPreviewService : IEventPreviewService
 
         user.FacultyId = u?.Faculty?.Id;
 
-        foreach (var strategy in _strategies.Where(s=>s.CanHandle(user)))
+        foreach (var strategy in _strategies.Where(s => s.CanHandle(user)))
         {
             var previews = await strategy.GetAsync(user, query);
             results.AddRange(previews);

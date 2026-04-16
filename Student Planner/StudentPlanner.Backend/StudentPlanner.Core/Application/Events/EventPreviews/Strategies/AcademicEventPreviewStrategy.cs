@@ -14,7 +14,7 @@ public class AcademicEventPreviewStrategy : IEventPreviewStrategy
 
     public async Task<IEnumerable<EventPreveiwDTO>> GetAsync(UserContext user, EventPreviewQuery query)
     {
-        if(user.FacultyId == null && user.Role != UserRoleOptions.Admin) 
+        if (user.FacultyId == null && user.Role != UserRoleOptions.Admin)
             throw new InvalidDataException("FacultyId is required.");
 
         var events = user.Role == UserRoleOptions.Admin ?
@@ -30,6 +30,6 @@ public class AcademicEventPreviewStrategy : IEventPreviewStrategy
             Title = e.EventDetails.Title,
             EventType = ValueObjects.EventPreveiwType.AcademicEvent
         });
-                            
+
     }
 }

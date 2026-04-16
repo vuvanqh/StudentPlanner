@@ -14,10 +14,10 @@ public class EventPreviewController : ControllerBase
     private readonly IEventPreviewService _eventPreviewService;
     public EventPreviewController(IEventPreviewService eventPreviewService)
     {
-        _eventPreviewService = eventPreviewService; 
+        _eventPreviewService = eventPreviewService;
     }
 
-   
+
     [HttpGet]
     public async Task<IActionResult> GetPreviews(DateTime? from, DateTime? to)
     {

@@ -11,7 +11,7 @@ namespace StudentPlanner.UI.Controllers;
 [ApiController]
 public class FacultyController : ControllerBase
 {
-    private readonly IFacultyService _facultyService; 
+    private readonly IFacultyService _facultyService;
     public FacultyController(IFacultyService facultyService)
     {
         _facultyService = facultyService;

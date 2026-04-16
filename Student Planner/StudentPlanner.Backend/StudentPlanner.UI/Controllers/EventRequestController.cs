@@ -86,7 +86,7 @@ public class EventRequestController : ControllerBase
     /// <param name="requestId">The ID of the event request.</param>
     /// <returns>The event request details.</returns>
     [HttpGet("{requestId:guid}")]
-    [Authorize(Roles =  nameof(UserRoleOptions.Manager) + "," + nameof(UserRoleOptions.Admin))]
+    [Authorize(Roles = nameof(UserRoleOptions.Manager) + "," + nameof(UserRoleOptions.Admin))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

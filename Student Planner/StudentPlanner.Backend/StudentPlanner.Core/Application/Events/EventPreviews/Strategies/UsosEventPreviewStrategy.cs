@@ -14,7 +14,7 @@ public class UsosEventPreviewStrategy : IEventPreviewStrategy
     public async Task<IEnumerable<EventPreveiwDTO>> GetAsync(UserContext user, EventPreviewQuery query)
     {
         var now = DateTime.UtcNow;
-        var from = query.From?? new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var from = query.From ?? new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = query.To ?? from
         .AddMonths(1)
         .AddDays(-1);
