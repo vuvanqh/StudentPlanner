@@ -2,6 +2,6 @@
 
 public interface IEventPreviewStrategy
 {
-    Task<IEnumerable<EventPreveiwDTO>> GetAsync(UserContext user, EventPreviewQuery query);
+    Task<IEnumerable<EventPreveiwDto>> GetAsync(UserContext user, EventPreviewQuery query);
     bool CanHandle(UserContext user);
 }

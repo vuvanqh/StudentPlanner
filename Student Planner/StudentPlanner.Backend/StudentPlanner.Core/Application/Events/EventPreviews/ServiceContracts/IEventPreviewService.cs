@@ -2,5 +2,5 @@
 
 public interface IEventPreviewService
 {
-    Task<IEnumerable<EventPreveiwDTO>> GetForUserAsync(UserContext user, EventPreviewQuery query);
+    Task<IEnumerable<EventPreveiwDto>> GetForUserAsync(UserContext user, EventPreviewQuery query);
 }

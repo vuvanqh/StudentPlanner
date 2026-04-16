@@ -12,10 +12,10 @@ public class PersonalEventPreveiwStrategy : IEventPreviewStrategy
 
     public bool CanHandle(UserContext user) => user.Role == UserRoleOptions.Student;
 
-    public async Task<IEnumerable<EventPreveiwDTO>> GetAsync(UserContext user, EventPreviewQuery query)
+    public async Task<IEnumerable<EventPreveiwDto>> GetAsync(UserContext user, EventPreviewQuery query)
     {
         var events = await _personalEventRepo.GetEventsByUserIdAsync(user.Id);
-        return events.Select(e => new EventPreveiwDTO()
+        return events.Select(e => new EventPreveiwDto()
         {
             EndTime = e.EventDetails.EndTime,
             StartTime = e.EventDetails.StartTime,

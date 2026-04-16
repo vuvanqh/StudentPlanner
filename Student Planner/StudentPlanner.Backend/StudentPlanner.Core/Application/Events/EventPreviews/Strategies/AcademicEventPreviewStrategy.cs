@@ -12,7 +12,7 @@ public class AcademicEventPreviewStrategy : IEventPreviewStrategy
     }
     public bool CanHandle(UserContext user) => true;
 
-    public async Task<IEnumerable<EventPreveiwDTO>> GetAsync(UserContext user, EventPreviewQuery query)
+    public async Task<IEnumerable<EventPreveiwDto>> GetAsync(UserContext user, EventPreviewQuery query)
     {
         if (user.FacultyId == null && user.Role != UserRoleOptions.Admin)
             throw new InvalidDataException("FacultyId is required.");
@@ -21,7 +21,7 @@ public class AcademicEventPreviewStrategy : IEventPreviewStrategy
             (await _academicEventRepo.GetAllAsync()) :
             (await _academicEventRepo.GetByFacultyIdAsync(user.FacultyId!.Value));
 
-        return events.Select(e => new EventPreveiwDTO
+        return events.Select(e => new EventPreveiwDto
         {
             EndTime = e.EventDetails.EndTime,
             StartTime = e.EventDetails.StartTime,

@@ -11,7 +11,7 @@ public class UsosEventPreviewStrategy : IEventPreviewStrategy
         _usosReop = usosReop;
     }
     public bool CanHandle(UserContext user) => user.Role == UserRoleOptions.Student;
-    public async Task<IEnumerable<EventPreveiwDTO>> GetAsync(UserContext user, EventPreviewQuery query)
+    public async Task<IEnumerable<EventPreveiwDto>> GetAsync(UserContext user, EventPreviewQuery query)
     {
         var now = DateTime.UtcNow;
         var from = query.From ?? new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -21,7 +21,7 @@ public class UsosEventPreviewStrategy : IEventPreviewStrategy
 
         var events = await _usosReop.GetByUserAndRangeAsync(user.Id, from, to);
 
-        return events.Select(e => new EventPreveiwDTO
+        return events.Select(e => new EventPreveiwDto
         {
             Id = e.Id,
             Title = e.EventDetails.Title,

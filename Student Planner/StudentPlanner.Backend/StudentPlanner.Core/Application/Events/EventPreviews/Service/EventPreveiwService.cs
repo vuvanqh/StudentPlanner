@@ -12,9 +12,9 @@ public class EventPreviewService : IEventPreviewService
         _userRepo = userRepo;
     }
 
-    public async Task<IEnumerable<EventPreveiwDTO>> GetForUserAsync(UserContext user, EventPreviewQuery query)
+    public async Task<IEnumerable<EventPreveiwDto>> GetForUserAsync(UserContext user, EventPreviewQuery query)
     {
-        var results = new List<EventPreveiwDTO>();
+        var results = new List<EventPreveiwDto>();
         var u = await _userRepo.GetByIdAsync(user.Id);
 
         user.FacultyId = u?.Faculty?.Id;
