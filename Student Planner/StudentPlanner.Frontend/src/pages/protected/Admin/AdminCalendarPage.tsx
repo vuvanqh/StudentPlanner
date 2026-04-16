@@ -49,7 +49,7 @@ export default function AdminCalendarPage(){
     
     return <>
         <ManagerCalendar events={[]}/>
-        <EventPanel label={viewRequests?"Recent Requests":"Upcoming events"}>
+        <EventPanel label={viewRequests?"Recent Requests":"Upcoming events"}> 
             <div className="events-controls">
                 <div className="toggle-group">
                     <button className={`toggle-btn ${!viewRequests ? "active" : ""}`} onClick={()=>setVievRequests(false)}>View Events</button>

@@ -2,13 +2,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StudentPlanner.Core.Application;
+using StudentPlanner.Core.Application.ClientContracts.DTO;
 using StudentPlanner.Core.Application.Authentication;
 using StudentPlanner.Core.Application.Exceptions;
 using StudentPlanner.Core.Domain.Entities;
-using StudentPlanner.Infrastructure.Clients;
+using StudentPlanner.Core.Application.ClientContracts;
 using StudentPlanner.Infrastructure.Clients.DTO;
-using StudentPlanner.Infrastructure.IdentityEntities;
-using StudentPlanner.Infrastructure.Services.Settings;
 using System.Net.Http.Json;
 namespace StudentPlanner.Infrastructure.Services;
 
@@ -79,5 +78,65 @@ public class UsosClient : IUsosClient
             Id = Guid.NewGuid()
         }).ToList();
     }
+    public async Task<List<UsosStudentDto>> GetStudentsByFacultyAsync(string usosToken, string facultyId)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/services/users/faculty/{facultyId}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", usosToken);
 
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogWarning(
+                "Failed to fetch faculty users from USOS for faculty {FacultyId}. Status code: {StatusCode}. Body: {Body}",
+                facultyId,
+                (int)response.StatusCode, errorBody);
+
+            throw new UsosException(
+           $"Failed to fetch users for faculty {facultyId}.",
+           response.StatusCode,
+           errorBody);
+        }
+
+        var students = await response.Content.ReadFromJsonAsync<List<UsosStudentResponseDto>>();
+
+        if (students == null)
+        {
+            _logger.LogCritical("USOS returned an empty users response for faculty {FacultyId}", facultyId);
+            throw new InvalidResponseException("USOS returned an empty users response.");
+        }
+
+        return students.Select(s => new UsosStudentDto
+        {
+            StudentId = s.student_id,
+            UniversityEmail = s.university_email,
+            FacultyId = s.faculty_id,
+            Status = s.status
+        }).ToList();
+    }
+    public async Task<List<UsosEventResponseDto>> GetTimetableAsync(string usosToken, DateOnly start, int days)
+    {
+        using var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"/services/tt/user?start={start:yyyy-MM-dd}&days={days}");
+
+        request.Headers.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", usosToken);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogWarning("Fetching USOS timetable failed. Status: {StatusCode}", response.StatusCode);
+            throw new UsosException($"Fetching timetable failed with status {response.StatusCode}");
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<List<UsosEventResponseDto>>();
+
+        if (result == null)
+            throw new InvalidResponseException("USOS returned empty timetable response.");
+
+        return result;
+    }
 }

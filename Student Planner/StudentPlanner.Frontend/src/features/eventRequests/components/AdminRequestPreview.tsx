@@ -10,10 +10,11 @@ export default function AdminRequestPreview({eventRequest}: adminRequestPreviewP
     const {approveRequest, rejectRequest} = useEventRequest(eventRequest.id);
     return  <div className="admin-request-row">
         <EventRequestPreview eventRequest={eventRequest}/>
-        <div className="admin-actions">
+
+        {eventRequest.status==="Pending" && <div className="admin-actions">
             <button className="approve-btn" onClick={() => approveRequest()}>Approve</button>
             <button className="reject-btn" onClick={() => rejectRequest()}>Reject</button>
-        </div>
+        </div>}
     </div>
 }
 

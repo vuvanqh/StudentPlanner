@@ -98,7 +98,7 @@ public class EventRequestController : ControllerBase
             if (userId == null)
                 return Unauthorized(new { Message = "Unauthorized access" });
 
-            var response = await _eventRequestService.GetByIdAsync(Guid.Parse(userId), requestId);
+            var response = await _eventRequestService.GetByIdAsync(requestId);
             return Ok(response);
         }
         catch (ArgumentException ex) when (ex.Message.Contains("exist", StringComparison.OrdinalIgnoreCase))

@@ -1,7 +1,11 @@
 using Serilog;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using StudentPlanner.Infrastructure;
 using StudentPlanner.Infrastructure.Identity;
 
 namespace StudentPlanner.Backend;
+
 
 /// <summary>
 /// Entry point for the StudentPlanner application.
@@ -32,6 +36,12 @@ public class Program
         });
 
         var app = builder.Build();
+        if (!app.Environment.IsEnvironment("Testing"))
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await db.Database.MigrateAsync();
+        }
 
         await IdentitySeeder.SeedAsync(app.Services);
 
