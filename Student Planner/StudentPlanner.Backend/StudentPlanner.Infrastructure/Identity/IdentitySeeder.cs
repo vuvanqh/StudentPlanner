@@ -30,7 +30,7 @@ public static class IdentitySeeder
                 LastName = "Hehe",
                 UserName = "hehe",
                 Email = "manager@pw.edu.pl",
-                FacultyId = Guid.Parse("948c3586-1299-41b1-ae33-f77316ced97d"),
+                FacultyId = Guid.Parse("ff8c5ad6-e743-4756-aaf9-7f56d686e57f"),
                 EmailConfirmed = true
             };
 
