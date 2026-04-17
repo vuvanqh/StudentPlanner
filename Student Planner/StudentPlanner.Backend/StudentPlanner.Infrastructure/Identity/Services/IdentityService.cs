@@ -106,23 +106,52 @@ public class IdentityService : IIdentityService
         await _userManager.UpdateAsync(appUser);
     }
 
-    public Task<User?> GetUserByIdAsync(Guid userId)
+    public async Task<User?> GetUserByIdAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        var appUser = await _userManager.FindByIdAsync(userId.ToString());
+        if (appUser == null)
+        {
+            return null;
+        }
+        var roles = await _userManager.GetRolesAsync(appUser);
+        var roleName = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
+        return appUser.ToUser(roleName);
     }
 
-    public Task<List<User>> GetAllUsersAsync()
+    public async Task<List<User>> GetAllUsersAsync()
     {
-        throw new NotImplementedException();
+        var appUsers = await _userManager.Users.Include(u => u.Faculty).ToListAsync();
+        var users = new List<User>();
+        foreach (var appUser in appUsers)
+        {
+            var roles = await _userManager.GetRolesAsync(appUser);
+            var roleName = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
+            users.Add(appUser.ToUser(roleName));
+        }
+        return users;
     }
 
-    public Task DeleteUserAsync(Guid userId)
+    public async Task DeleteUserAsync(Guid userId)
     {
-        throw new NotImplementedException();
+        var appUser = await _userManager.FindByIdAsync(userId.ToString());
+        if (appUser == null)
+            throw new KeyNotFoundException("User not found!");
+        var result = await _userManager.DeleteAsync(appUser);
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException(string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
     }
 
-    public Task<User?> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        var appUser = await _userManager.FindByEmailAsync(email);
+        if (appUser == null)
+        {
+            return null;
+        }
+        var roles = await _userManager.GetRolesAsync(appUser);
+        var roleName = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
+        return appUser.ToUser(roleName);
     }
 }
