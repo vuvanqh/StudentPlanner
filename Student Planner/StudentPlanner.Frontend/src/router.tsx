@@ -11,6 +11,7 @@ import ManagerPage from "./pages/protected/Manager/ManagerPage";
 import StudentCalendarPage from "./pages/protected/Student/StudentCalendarPage";
 import ManagerCalendarPage from "./pages/protected/Manager/ManagerCalendarPage";
 import AdminCalendarPage from "./pages/protected/Admin/AdminCalendarPage";
+import UserManagementPage from "./pages/protected/Admin/UserManagementPage";
 
 export const router = createBrowserRouter([{
     path: "/",
@@ -82,6 +83,10 @@ export const router = createBrowserRouter([{
                         {
                             index: true,
                             element: <AdminCalendarPage/>
+                        },
+                        {
+                            path:"users",
+                            element: <UserManagementPage/>
                         }
                     ]
                 }
