@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using StudentPlanner.Core.Entities;
 using StudentPlanner.Infrastructure.IdentityEntities;
@@ -20,6 +20,7 @@ public static class IdentitySeeder
         if (!await roleManager.RoleExistsAsync(UserRoleOptions.Manager.ToString()))
             await roleManager.CreateAsync(new ApplicationRole { Name = UserRoleOptions.Manager.ToString() });
 
+        /*
         var manager = await userManager.FindByEmailAsync("manager@pw.edu.pl");
 
         if (manager == null)
@@ -37,6 +38,7 @@ public static class IdentitySeeder
             await userManager.CreateAsync(manager, "Password123!");
             await userManager.AddToRoleAsync(manager, UserRoleOptions.Manager.ToString());
         }
+        */
 
         if (!await roleManager.RoleExistsAsync(UserRoleOptions.Admin.ToString()))
             await roleManager.CreateAsync(new ApplicationRole { Name = UserRoleOptions.Admin.ToString() });
