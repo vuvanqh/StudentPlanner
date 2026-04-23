@@ -118,14 +118,6 @@ public class AdminService : IAdminService
 
         if (string.IsNullOrWhiteSpace(request.LastName))
             throw new ArgumentException("Last name is required.");
-            
-        // var existingUsers = await _identityService.GetAllUsersAsync();
-        // string temporaryEmail;
-        // do
-        // {
-        //     temporaryEmail = GenerateEmail();
-        // }
-        // while (CheckExistenceOfUser(existingUsers, temporaryEmail));
 
         var faculty = await _facultyRepository.GetFacultyByUsosIdAsync(request.FacultyId);
         if (faculty == null)
@@ -182,33 +174,6 @@ public class AdminService : IAdminService
         }
 
         return new string(chars.OrderBy(_ => random.Next()).ToArray());
-    }
-
-    private static string GenerateEmail()
-    {
-        const string upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-        const string lower = "abcdefghjklmnpqrstuvwxyz";
-        const string digits = "1234567890";
-        const string tail = "@pw.edu.pl";
-        const string all = upper + lower + digits;
-        var random = new Random();
-        var starter = new List<char>
-        {
-            upper[random.Next(upper.Length)],
-            lower[random.Next(lower.Length)],
-            digits[random.Next(digits.Length)]
-        };
-        for (int i = starter.Count; i < 12; i++)
-        {
-            starter.Add(all[random.Next(all.Length)]);
-        }
-        return new string(starter.ToArray()) + tail;
-
-    }
-    private static bool CheckExistenceOfUser(List<User>? existingUsers, string temporaryEmail)
-    {
-        return existingUsers?.Any(u =>
-            string.Equals(u.Email, temporaryEmail, StringComparison.OrdinalIgnoreCase)) == true;
     }
     public async Task<List<ManagerResponseDto>> GetManagersAsync()
     {

@@ -97,7 +97,8 @@ public class AdminController : ControllerBase
     ///     {
     ///         "firstName": "John",
     ///         "lastName": "Smith",
-    ///         "facultyId": "WMiNI"
+    ///         "facultyId": "MINI"
+    ///         "email": "whateveremail@pw.edu.pl"
     ///     }
     ///
     /// </remarks>
