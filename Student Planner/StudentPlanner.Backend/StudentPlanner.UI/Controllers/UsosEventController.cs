@@ -26,7 +26,6 @@ public class UsosEventsController : ControllerBase
 
     public UsosEventsController(IUserRepository userRepository, IUsosEventService usosEventService)
     {
-        _userRepository = userRepository;
         _usosEventService = usosEventService;
     }
 
@@ -47,18 +46,11 @@ public class UsosEventsController : ControllerBase
             if (!Guid.TryParse(userIdClaim, out var userId))
                 return Unauthorized(new { message = "Invalid user id claim format." });
 
-            var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null)
-                return Unauthorized(new { message = "User not found." });
-
-            if (string.IsNullOrWhiteSpace(user.UsosToken))
-                return BadRequest(new { message = "User does not have a linked USOS token." });
-
             var parsedStart = string.IsNullOrWhiteSpace(start)
                 ? DateOnly.FromDateTime(DateTime.UtcNow)
                 : DateOnly.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-            var events = await _usosEventService.SyncAndGetEventsAsync(userId, user.UsosToken, parsedStart, days);
+            var events = await _usosEventService.SyncAndGetEventsAsync(userId, parsedStart, days);
 
             return Ok(events);
         }
