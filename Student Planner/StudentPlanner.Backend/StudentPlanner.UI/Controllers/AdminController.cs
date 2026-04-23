@@ -115,18 +115,10 @@ public class AdminController : ControllerBase
             var result = await _adminService.CreateManagerAsync(request);
             return Ok(result);
         }
-        catch (ArgumentNullException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        catch (Exception ex)
+    {
+        return BadRequest(new { message = ex.Message });
+    }
     }
     /// <summary>
     /// Retrieves all managers from the database.
