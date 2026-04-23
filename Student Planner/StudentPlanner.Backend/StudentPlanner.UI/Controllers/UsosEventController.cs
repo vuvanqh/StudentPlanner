@@ -8,9 +8,10 @@ using System.Security.Claims;
 using System.Globalization;
 namespace StudentPlanner.UI.Controllers;
 
-/// <summary>
-/// Provides endpoints for fetching time-table for  students.
-/// </summary>
+    /// <summary>
+    /// Provides endpoints for retrieving USOS timetable events
+    /// for the currently authenticated student.
+    /// </summary>
 
 [Route("api/usos-events")]
 [ApiController]
@@ -18,20 +19,48 @@ namespace StudentPlanner.UI.Controllers;
 
 public class UsosEventsController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
     private readonly IUsosEventService _usosEventService;
+    
     /// <summary>
-    /// Creates a controller, it has usosCLient and userRepository.
+    /// Initializes a new instance of the <see cref="UsosEventsController"/> class.
     /// </summary>
-
-    public UsosEventsController(IUserRepository userRepository, IUsosEventService usosEventService)
+    /// <param name="usosEventService">
+    /// Service responsible for retrieving and synchronizing
+    /// the authenticated student's USOS events.
+    /// </param>
+    public UsosEventsController(IUsosEventService usosEventService)
     {
         _usosEventService = usosEventService;
     }
 
     /// <summary>
-    /// api end point of the form  PortNum/api/usos-events/me?start=yyyy-mm-day andpersand days=n
+    /// Retrieves the authenticated student's USOS timetable events
+    /// for the specified date range.
     /// </summary>
+    /// <param name="start">
+    /// Optional start date in <c>yyyy-MM-dd</c> format.
+    /// If not provided, the current UTC date is used.
+    /// </param>
+    /// <param name="days">
+    /// Number of days to retrieve starting from <paramref name="start"/>.
+    /// The default value is 30.
+    /// </param>
+    /// <returns>
+    /// An <see cref="IActionResult"/> containing the list of synchronized USOS events.
+    /// </returns>
+    /// <response code="200">
+    /// Returns the list of USOS events for the authenticated student.
+    /// </response>
+    /// <response code="400">
+    /// Returned when the <paramref name="start"/> date format is invalid.
+    /// </response>
+    /// <response code="401">
+    /// Returned when the user identifier claim is missing or invalid.
+    /// </response>
+    /// <response code="502">
+    /// Returned when communication with the external USOS system fails
+    /// or the response from USOS is invalid.
+    /// </response>
 
     [HttpGet]
     public async Task<IActionResult> GetMyEvents([FromQuery] string? start, [FromQuery] int days = 30)
