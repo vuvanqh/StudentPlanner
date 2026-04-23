@@ -118,13 +118,14 @@ public class AdminService : IAdminService
 
         if (string.IsNullOrWhiteSpace(request.LastName))
             throw new ArgumentException("Last name is required.");
-        var existingUsers = await _identityService.GetAllUsersAsync();
-        string temporaryEmail;
-        do
-        {
-            temporaryEmail = GenerateEmail();
-        }
-        while (CheckExistenceOfUser(existingUsers, temporaryEmail));
+            
+        // var existingUsers = await _identityService.GetAllUsersAsync();
+        // string temporaryEmail;
+        // do
+        // {
+        //     temporaryEmail = GenerateEmail();
+        // }
+        // while (CheckExistenceOfUser(existingUsers, temporaryEmail));
 
         var faculty = await _facultyRepository.GetFacultyByUsosIdAsync(request.FacultyId);
         if (faculty == null)
@@ -135,7 +136,7 @@ public class AdminService : IAdminService
         var managerUser = new User
         {
             Id = Guid.NewGuid(),
-            Email = temporaryEmail,
+            Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
             Role = UserRoleOptions.Manager.ToString(),
@@ -234,5 +235,5 @@ public class AdminService : IAdminService
             FacultyCode = u.Faculty?.FacultyCode,
         }).ToList();
     }
-    
+
 }

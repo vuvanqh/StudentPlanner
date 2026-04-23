@@ -1,5 +1,5 @@
 namespace StudentPlanner.Core.Application.Admin.DTO;
-public class ManagerResponseDto
+public record ManagerResponseDto
 {
     public Guid Id{get;set;}
     public string FirstName{get;set;}
