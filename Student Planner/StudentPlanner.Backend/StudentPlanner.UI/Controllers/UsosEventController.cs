@@ -95,5 +95,9 @@ public class UsosEventsController : ControllerBase
         {
             return StatusCode(StatusCodes.Status502BadGateway, new { message = ex.Message });
         }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }
