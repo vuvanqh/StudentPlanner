@@ -254,7 +254,7 @@ public class AdminServiceTests
                 FirstName = "Piotr",
                 LastName = "Kowal",
                 Email = "piotr.kowal@pw.edu.pl",
-                Role = "manager",
+                Role = UserRoleOptions.Manager.ToString(),
                 Faculty = null
             },
             new()
@@ -288,21 +288,23 @@ public class AdminServiceTests
             x.Email == "anna.nowak@pw.edu.pl" ||
             x.Email == "piotr.kowal@pw.edu.pl");
 
-        result.Should().ContainEquivalentOf(new ManagerResponseDto
+        result.Should().ContainEquivalentOf(new UsersResultDto
         {
             Id = users[0].Id,
             FirstName = "Anna",
             LastName = "Nowak",
             Email = "anna.nowak@pw.edu.pl",
+            UserRole = UserRoleOptions.Manager.ToString(),
             FacultyCode = "EL"
         });
 
-        result.Should().ContainEquivalentOf(new ManagerResponseDto
+        result.Should().ContainEquivalentOf(new UsersResultDto
         {
             Id = users[1].Id,
             FirstName = "Piotr",
             LastName = "Kowal",
             Email = "piotr.kowal@pw.edu.pl",
+            UserRole = UserRoleOptions.Manager.ToString(),
             FacultyCode = null
         });
     }
@@ -316,12 +318,13 @@ public class AdminServiceTests
             FacultyName = "Electronics",
             FacultyCode = "EL"
         };
-
+        Guid AnnaId = Guid.NewGuid();
+        Guid JanId = Guid.NewGuid();
         var users = new List<User>
         {
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = AnnaId,
                 FirstName = "Anna",
                 LastName = "Nowak",
                 Email = "anna.nowak@pw.edu.pl",
@@ -330,7 +333,7 @@ public class AdminServiceTests
             },
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = JanId,
                 FirstName = "Jan",
                 LastName = "Kowalski",
                 Email = "jan.kowalski@pw.edu.pl",
@@ -349,6 +352,7 @@ public class AdminServiceTests
 
         result.Should().ContainEquivalentOf(new UsersResultDto
         {
+            Id = AnnaId,
             FirstName = "Anna",
             LastName = "Nowak",
             UserRole = UserRoleOptions.Manager.ToString(),
@@ -358,6 +362,7 @@ public class AdminServiceTests
 
         result.Should().ContainEquivalentOf(new UsersResultDto
         {
+            Id = JanId,
             FirstName = "Jan",
             LastName = "Kowalski",
             UserRole = UserRoleOptions.Student.ToString(),
