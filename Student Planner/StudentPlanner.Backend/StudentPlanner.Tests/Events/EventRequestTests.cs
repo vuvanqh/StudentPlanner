@@ -38,6 +38,10 @@ public class EventRequestTests
         clientsMock.Setup(c => c.Group(It.IsAny<string>())).Returns(clientProxyMock.Object);
         clientsMock.Setup(c => c.User(It.IsAny<string>())).Returns(clientProxyMock.Object);
         _erHubMock.Setup(h => h.Clients).Returns(clientsMock.Object);
+        _notificationPreferenceServiceMock = new Mock<INotificationPreferenceService>();
+        _notificationPreferenceServiceMock
+            .Setup(x => x.AreNotificationsEnabledAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(true);
     }
 
     private EventRequestService CreateService()
