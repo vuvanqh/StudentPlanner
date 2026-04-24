@@ -16,13 +16,10 @@ namespace StudentPlanner.Tests.Authentication;
 
 public class EmailIntegrationTests : IntegrationTestBase
 {
-    private readonly StudentPlannerWebApplicationFactory _factory;
-    private readonly HttpClient _client;
+    private new readonly HttpClient _client;
 
     public EmailIntegrationTests(StudentPlannerWebApplicationFactory factory) : base(factory)
     {
-        _factory = factory;
-
         var customFactory = factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureTestServices(services =>
