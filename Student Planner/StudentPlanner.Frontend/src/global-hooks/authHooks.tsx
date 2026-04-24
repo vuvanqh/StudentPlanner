@@ -36,6 +36,10 @@ export function useAuth(){
 
     const {mutateAsync: resetPassword, isPending: isResetPending} = useMutation({
         mutationFn: verifyAndResetPassword,
+        onSuccess: () => {
+            successMessage("Password reset successfully! You can now log in.");
+            navigate("/login");
+        },
         onError: (error)=> {errorMessage(error.message)}
     })
 

@@ -12,7 +12,6 @@ export type ForgotPasswordState = {
   newPassword: string;
   confirmNewPassword: string;
   errors: string[];
-  success: boolean;
 }
 
 export const INITIAL_FORGOT_PASSWORD_STATE: ForgotPasswordState = {
@@ -21,6 +20,5 @@ export const INITIAL_FORGOT_PASSWORD_STATE: ForgotPasswordState = {
   token: "",
   newPassword: "",
   confirmNewPassword: "",
-  errors: [],
-  success: false
+  errors: []
 }
