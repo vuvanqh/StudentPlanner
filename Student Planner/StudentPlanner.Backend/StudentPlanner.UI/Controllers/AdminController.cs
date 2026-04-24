@@ -131,7 +131,7 @@ public class AdminController : ControllerBase
     /// <response code="401">The request is unauthorized.</response>
     /// <response code="403">The authenticated user does not have Admin privileges.</response>
     [HttpGet("managers")]
-    public async Task<ActionResult<ManagerResponseDto>> GetManagers()
+    public async Task<ActionResult<UsersResultDto>> GetManagers()
     {
         try
         {

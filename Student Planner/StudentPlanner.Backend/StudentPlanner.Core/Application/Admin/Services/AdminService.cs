@@ -6,6 +6,7 @@ using StudentPlanner.Core.Application.ClientContracts;
 using StudentPlanner.Core.Entities;
 using StudentPlanner.Core.Application.Exceptions;
 using StudentPlanner.Core.Domain.RepositoryContracts;
+using System.Security.Cryptography;
 namespace StudentPlanner.Core;
 
 public class AdminService : IAdminService
@@ -158,32 +159,44 @@ public class AdminService : IAdminService
         const string special = "!@#$%^&*";
         const string all = upper + lower + digits + special;
 
-        var random = new Random();
-
         var chars = new List<char>
     {
-        upper[random.Next(upper.Length)],
-        lower[random.Next(lower.Length)],
-        digits[random.Next(digits.Length)],
-        special[random.Next(special.Length)]
+        GetRandomChar(upper),
+        GetRandomChar(lower),
+        GetRandomChar(digits),
+        GetRandomChar(special),
     };
 
-        for (int i = chars.Count; i < 12; i++)
+        while (chars.Count < 12)
         {
-            chars.Add(all[random.Next(all.Length)]);
+            chars.Add(GetRandomChar(all));
         }
-
-        return new string(chars.OrderBy(_ => random.Next()).ToArray());
+        Shuffle(chars);
+        return new string(chars.ToArray());
     }
-    public async Task<List<ManagerResponseDto>> GetManagersAsync()
+    private static char GetRandomChar(string source)
+    {
+        int index = RandomNumberGenerator.GetInt32(source.Length);
+        return source[index];
+    }
+    private static void Shuffle(List<char> chars)
+    {
+        for (int i = chars.Count - 1; i > 0; i--)
+        {
+            int j = RandomNumberGenerator.GetInt32(i + 1);
+            (chars[i], chars[j]) = (chars[j], chars[i]);
+        }
+    }
+    public async Task<List<UsersResultDto>> GetManagersAsync()
     {
         var users = await _identityService.GetAllUsersAsync();
         return users.Where(u => string.Equals(u.Role, UserRoleOptions.Manager.ToString(), StringComparison.OrdinalIgnoreCase))
-        .Select(u => new ManagerResponseDto
+        .Select(u => new UsersResultDto
         {
             Id = u.Id,
             FirstName = u.FirstName,
             LastName = u.LastName,
+            UserRole = u.Role,
             Email = u.Email,
             FacultyCode = u.Faculty?.FacultyCode,
         }).ToList();
@@ -193,6 +206,7 @@ public class AdminService : IAdminService
         var users = await _identityService.GetAllUsersAsync();
         return users.Select(u => new UsersResultDto
         {
+            Id = u.Id,
             FirstName = u.FirstName,
             LastName = u.LastName,
             UserRole = u.Role,
