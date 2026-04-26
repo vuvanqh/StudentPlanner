@@ -5,3 +5,4 @@ const authUrl = "/auth";
 
 export const login = async (payload: loginRequest) => (await apiClient.post(authUrl + "/login", payload)).data;
 export const register = async (payload: registerRequest) => (await apiClient.post(authUrl + "/register", payload)).data;
+export const logout = async () => (await apiClient.post(authUrl + "/logout")).data;

@@ -29,6 +29,14 @@ export function useAuth(){
         onError: (error)=> {errorMessage(error.message)}
     })
 
+    const {mutateAsync: logout} = useMutation({
+        mutationFn: async() => {
+            await localStorage.clear();
+            queryClient.setQueryData(["user"], undefined);
+            navigate("/")
+        }
+    })
+
     const {mutate: registerUser, isPending: isRegisterPending} = useMutation({
         mutationFn: register,
         onSuccess: () => {
@@ -39,6 +47,7 @@ export function useAuth(){
     })
     return {
         login: mutateAsync, 
+        logout,
         registerUser,
         isAuthenticated: !!queryClient.getQueryData(["user"]),
         isLoginPending,

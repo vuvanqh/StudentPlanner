@@ -12,6 +12,7 @@ import StudentCalendarPage from "./pages/protected/Student/StudentCalendarPage";
 import ManagerCalendarPage from "./pages/protected/Manager/ManagerCalendarPage";
 import AdminCalendarPage from "./pages/protected/Admin/AdminCalendarPage";
 import UserManagementPage from "./pages/protected/Admin/UserManagementPage";
+import AcademicEventPage from "./pages/protected/common/AcademicEventPage";
 
 export const router = createBrowserRouter([{
     path: "/",
@@ -46,7 +47,7 @@ export const router = createBrowserRouter([{
                         },
                         {
                             path: "events",
-                            element: <StudentCalendarPage/>
+                            element: <AcademicEventPage/>
                         },
                         {
                             path: "requests",
@@ -66,7 +67,7 @@ export const router = createBrowserRouter([{
                         },
                         {
                             path: "events",
-                            element: <ManagerCalendarPage/> //TO-DO idiot
+                            element: <AcademicEventPage/>
                         },
                         {
                             path: "requests",

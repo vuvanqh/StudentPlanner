@@ -24,3 +24,15 @@ export const errorMessage = (message: string) => toast.success(message, {
     theme: "dark",
     transition: Slide,
 });
+
+export const infoMessage = (message: string) => toast.info(message, {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Slide,
+});

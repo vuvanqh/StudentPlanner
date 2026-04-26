@@ -154,4 +154,14 @@ public class IdentityService : IIdentityService
         var roleName = roles.FirstOrDefault() ?? UserRoleOptions.Student.ToString();
         return appUser.ToUser(roleName);
     }
+
+    public async Task LogOut(string id)
+    {
+        var appUser = await _userManager.FindByIdAsync(id);
+        if (appUser == null)
+            throw new KeyNotFoundException("User not found!");
+
+        appUser.RefreshTokenHash = null;
+        await _signInManager.SignOutAsync();
+    }
 }
