@@ -2,11 +2,12 @@ import { createContext, type ReactNode } from "react";
 import { useReducer } from "react";
 import type { personalEventResponse } from "../types/personalEventTypes";
 import type { userResponse } from "../types/admin.types";
+import type { eventPreviewResponse } from "../types/eventPreviewResponse";
 
 
 
 export type ModalType = 
-    | { type: "view"; eventId: string }
+    | { type: "view"; eventPreview: eventPreviewResponse }
     | { type: "edit"; eventId: string }
     | { type: "createPersonal"; startTime?: string;} 
     | { type: "eventList", events: personalEventResponse[]}
