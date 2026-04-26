@@ -208,7 +208,13 @@ public class AuthenticationController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Logs out the authenticated user and removes the refresh token cookie.
+    /// </summary>
+    /// <returns>200 OK if logout succeeds, or 401 Unauthorized if the user is not authenticated.</returns>
     [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Description = "User not authenticated")]
     public async Task<IActionResult> Logout()
     {
         var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
