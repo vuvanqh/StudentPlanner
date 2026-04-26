@@ -53,6 +53,7 @@ public class AcademicEventController : ControllerBase
     /// Retrieves all academic events relevant to the authenticated user's faculty.
     /// </summary>
     /// <returns>A list of academic events for the user's faculty.</returns>
+    [Authorize(Roles = nameof(UserRoleOptions.Admin))]
     [HttpGet("faculty")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
