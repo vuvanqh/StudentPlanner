@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { approveEventRequest, createEventRequest, deleteEventRequest, getAllEventRequests, getEventRequestById, getMyRequests, rejectEventRequest } from "../../../api/eventRequestApi";
+import { approveEventRequest, createEventRequest, deleteEventRequest, getAllEventRequests, getEventRequestById, getMyRequests, rejectEventRequest } from "../../../api/events/eventRequestApi";
 import type { createEventRequest as createRequestType, eventRequestResponse } from "../../../types/eventRequestTypes";
 import { queryClient } from "../../../api/queryClient";
 

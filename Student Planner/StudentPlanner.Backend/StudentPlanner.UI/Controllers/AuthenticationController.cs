@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using StudentPlanner.Core.Application.Authentication;
 
 namespace StudentPlanner.UI.Controllers;
@@ -205,5 +206,27 @@ public class AuthenticationController : ControllerBase
             _logger.LogCritical(ex, "IDENTITY ERROR for {Email}: {Message}", request.Email, ex.Message);
             return BadRequest($"DEBUG ERROR: {ex}");
         }
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+        if(userId==null)
+            return Unauthorized("User not authenticated");
+
+        string? token = Request.Cookies["refreshToken"];
+        if (token != null)
+        {
+            await _authenticationService.LogOut(userId);
+            Response.Cookies.Delete("refreshToken", new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/api/auth"
+            });
+        }
+        return Ok();
     }
 }
