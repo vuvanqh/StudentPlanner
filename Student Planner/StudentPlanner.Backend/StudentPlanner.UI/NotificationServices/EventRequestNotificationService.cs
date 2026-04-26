@@ -2,7 +2,6 @@
 using StudentPlanner.Core.Application.Notifications.ServiceContracts;
 using StudentPlanner.Core.Entities;
 using StudentPlanner.UI.Hubs;
-using StudentPlanner.Core.Application.Notifications.ServiceContracts;
 
 namespace StudentPlanner.UI.NotificationServices;
 
@@ -33,6 +32,9 @@ public class EventRequestNotificationService : IEventRequestNotificationService
     /// </summary>
     /// <param name="hub">
     /// SignalR hub context used to send messages to connected clients.
+    /// </param>
+    /// <param name="notificationPreferenceService">
+    /// Service used to check whether notifications are enabled for a user.
     /// </param>
     public EventRequestNotificationService(IHubContext<EventRequestHub> hub, INotificationPreferenceService notificationPreferenceService)
     {

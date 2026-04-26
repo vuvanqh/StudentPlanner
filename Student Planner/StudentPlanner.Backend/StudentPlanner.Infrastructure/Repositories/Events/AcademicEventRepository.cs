@@ -66,17 +66,15 @@ public class AcademicEventRepository : IAcademicEventRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> UnsubscribeAsync(Guid eventId, Guid userId)
+    public async Task UnsubscribeAsync(Guid eventId, Guid userId)
     {
         var subscription = await _context.AcademicEventSubscribers
             .FirstOrDefaultAsync(s => s.AcademicEventId == eventId && s.UserId == userId);
 
         if (subscription == null)
-            return false;
+            return;
 
         _context.AcademicEventSubscribers.Remove(subscription);
         await _context.SaveChangesAsync();
-
-        return true;
     }
 }

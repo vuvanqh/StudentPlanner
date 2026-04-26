@@ -319,8 +319,12 @@ public class AcademicEventServiceTests
         };
 
         _userRepositoryMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+        _userRepositoryMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
         _academicEventRepositoryMock.Setup(repo => repo.GetByIdAsync(eventId)).ReturnsAsync(academicEvent);
-        _academicEventRepositoryMock.Setup(repo => repo.UnsubscribeAsync(eventId, userId)).ReturnsAsync(true);
+        _academicEventRepositoryMock
+            .Setup(repo => repo.IsSubscribedAsync(eventId, userId))
+            .ReturnsAsync(true);
+        _academicEventRepositoryMock.Setup(repo => repo.UnsubscribeAsync(eventId, userId)).Returns(Task.CompletedTask);
 
         await _academicEventService.UnsubscribeAsync(eventId, userId);
 
@@ -352,8 +356,12 @@ public class AcademicEventServiceTests
         };
 
         _userRepositoryMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
+        _userRepositoryMock.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(user);
         _academicEventRepositoryMock.Setup(repo => repo.GetByIdAsync(eventId)).ReturnsAsync(academicEvent);
-        _academicEventRepositoryMock.Setup(repo => repo.UnsubscribeAsync(eventId, userId)).ReturnsAsync(false);
+        _academicEventRepositoryMock
+            .Setup(repo => repo.IsSubscribedAsync(eventId, userId))
+            .ReturnsAsync(false);
+        _academicEventRepositoryMock.Setup(repo => repo.UnsubscribeAsync(eventId, userId)).Returns(Task.CompletedTask);
 
         Func<Task> act = async () => await _academicEventService.UnsubscribeAsync(eventId, userId);
 

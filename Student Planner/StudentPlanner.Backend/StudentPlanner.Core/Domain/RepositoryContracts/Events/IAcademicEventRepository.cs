@@ -14,5 +14,5 @@ public interface IAcademicEventRepository
     Task DeleteAsync(Guid eventId);
     Task<bool> IsSubscribedAsync(Guid eventId, Guid userId);
     Task SubscribeAsync(Guid eventId, Guid userId);
-    Task<bool> UnsubscribeAsync(Guid eventId, Guid userId);
+    Task UnsubscribeAsync(Guid eventId, Guid userId);
 }

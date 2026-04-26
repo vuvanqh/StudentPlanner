@@ -67,9 +67,11 @@ public class AcademicEventService : IAcademicEventService
     {
         await EnsureUserCanAccessEventAsync(eventId, userId);
 
-        bool removed = await _academicEventRepository.UnsubscribeAsync(eventId, userId);
-        if (!removed)
+        bool isSubscribed = await _academicEventRepository.IsSubscribedAsync(eventId, userId);
+        if (!isSubscribed)
             throw new KeyNotFoundException("Subscription not found.");
+
+        await _academicEventRepository.UnsubscribeAsync(eventId, userId);
     }
 
     private async Task EnsureUserCanAccessEventAsync(Guid eventId, Guid userId)

@@ -12,7 +12,6 @@ using StudentPlanner.Core.Application.Events.UsosEvents.ServiceContracts;
 using StudentPlanner.Core.Application.Events.UsosEvents.Services;
 using StudentPlanner.Core.Application.Notifications.ServiceContracts;
 using StudentPlanner.Core.Application.PersonalEvents;
-using StudentPlanner.Core.Application.Notifications.ServiceContracts;
 using StudentPlanner.Core.Application.Notifications.Services;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Infrastructure.Identity;
