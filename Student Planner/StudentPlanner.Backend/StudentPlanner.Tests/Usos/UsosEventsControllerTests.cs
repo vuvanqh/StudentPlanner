@@ -11,6 +11,7 @@ using StudentPlanner.Core.Entities;
 using StudentPlanner.Infrastructure.Repositories;
 using StudentPlanner.UI.Controllers;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 namespace StudentPlanner.Tests.Usos;
 
@@ -128,5 +129,5 @@ public class UsosEventsControllerTests
             s => s.SyncAndGetEventsAsync(userId, new DateOnly(2025, 10, 1), 7),
             Times.Once);
     }
-
+    
 }
