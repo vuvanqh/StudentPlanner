@@ -78,3 +78,8 @@ public class AcademicEventRepository : IAcademicEventRepository
         await _context.SaveChangesAsync();
     }
 }
+    public async Task<IEnumerable<AcademicEvent>> GetByFacultiesAsync(List<Guid> facultyIds)
+    {
+        return await _context.AcademicEvents.Where(e => facultyIds.Contains(e.FacultyId)).ToListAsync();
+    }
+}

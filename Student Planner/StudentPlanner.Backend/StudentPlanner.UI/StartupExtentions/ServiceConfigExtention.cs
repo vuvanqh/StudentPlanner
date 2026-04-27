@@ -18,7 +18,6 @@ using StudentPlanner.Core.Application.Services;
 using StudentPlanner.Core.Domain.RepositoryContracts;
 using StudentPlanner.Infrastructure.Identity;
 using StudentPlanner.Infrastructure.Repositories;
-using StudentPlanner.Infrastructure.Repositories.Events;
 using StudentPlanner.Infrastructure.Services;
 using StudentPlanner.Infrastructure.Services.Settings;
 using StudentPlanner.UI.NotificationServices;
@@ -59,6 +58,8 @@ public static class ServiceConfigExtention
         services.AddScoped<INotificationPreferenceService, NotificationPreferenceService>();
 
         services.AddScoped<IFacultyService, FacultyService>();
+        services.AddMemoryCache();
+
         //notification services
         services.AddScoped<IEventRequestNotificationService, EventRequestNotificationService>();
 
@@ -80,7 +81,6 @@ public static class ServiceConfigExtention
         services.AddTransient<IEventRequestApprovalStrategy, StudentPlanner.Core.Application.EventRequests.Strategies.DeleteApprovalStrategy>();
         services.AddTransient<IEventPreviewStrategy, PersonalEventPreveiwStrategy>();
         services.AddTransient<IEventPreviewStrategy, AcademicEventPreviewStrategy>();
-        services.AddTransient<IEventPreviewStrategy, UsosEventPreviewStrategy>();
 
         //hosted
         services.AddHostedService<FacultyBootstrapService>();
