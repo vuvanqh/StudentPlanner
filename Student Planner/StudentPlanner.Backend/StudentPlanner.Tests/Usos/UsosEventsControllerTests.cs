@@ -11,6 +11,7 @@ using StudentPlanner.Core.Entities;
 using StudentPlanner.Infrastructure.Repositories;
 using StudentPlanner.UI.Controllers;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 namespace StudentPlanner.Tests.Usos;
 
